@@ -1,0 +1,106 @@
+The target system is: Generic - 2.4.0 - arm
+The host system is: Windows - 10.0.18363 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: C:/gnuarmemb/bin/arm-none-eabi-gcc.exe 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+
+The C compiler identification is GNU, found in "C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/3.18.1/CompilerIdC/CMakeCCompilerId.o"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: C:/gnuarmemb/bin/arm-none-eabi-gcc.exe 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+
+The CXX compiler identification is GNU, found in "C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/3.18.1/CompilerIdCXX/CMakeCXXCompilerId.o"
+
+Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+arm-none-eabi-gcc.exe (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Performing C SOURCE FILE Test check_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0_ succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_5e617 && [1/2] Building C object CMakeFiles/cmTC_5e617.dir/src.c.obj
+[2/2] Linking C executable cmTC_5e617
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test check_Wlogical_op_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_0bfdd && [1/2] Building C object CMakeFiles/cmTC_0bfdd.dir/src.c.obj
+[2/2] Linking C executable cmTC_0bfdd
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test check_Wmissing_field_initializers_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_b181b && [1/2] Building C object CMakeFiles/cmTC_b181b.dir/src.c.obj
+[2/2] Linking C executable cmTC_b181b
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test check_Wpacked_bitfield_compat_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_99cdc && [1/2] Building C object CMakeFiles/cmTC_99cdc.dir/src.c.obj
+[2/2] Linking C executable cmTC_99cdc
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test check_Wvla_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_1f63f && [1/2] Building C object CMakeFiles/cmTC_1f63f.dir/src.c.obj
+[2/2] Linking C executable cmTC_1f63f
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test check_fno_freestanding_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_84e79 && [1/2] Building C object CMakeFiles/cmTC_84e79.dir/src.c.obj
+[2/2] Linking C executable cmTC_84e79
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test check_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__fsanitize_address succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_cebab && [1/2] Building C object CMakeFiles/cmTC_cebab.dir/src.c.obj
+[2/2] Linking C executable cmTC_cebab
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test check_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__fsanitize_undefined succeeded with the following output:
+Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_f80d4 && [1/2] Building C object CMakeFiles/cmTC_f80d4.dir/src.c.obj
+[2/2] Linking C executable cmTC_f80d4
+
+
+Source file was:
+int main(void) { return 0; }

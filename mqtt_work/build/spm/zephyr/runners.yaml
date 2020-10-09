@@ -1,0 +1,29 @@
+# Available runners configured by board.cmake.
+runners:
+- nrfjprog
+- jlink
+
+# Default flash runner if --runner is not given.
+flash-runner: nrfjprog
+
+# Default debug runner if --runner is not given.
+debug-runner: jlink
+
+# Common runner configuration values.
+config:
+  board_dir: C:/Users/cafo/ncs/my_ncs/ncs/zephyr/boards/arm/nrf9160dk_nrf9160
+  # Build outputs:
+  elf_file: zephyr.elf
+  hex_file: zephyr.hex
+  bin_file: zephyr.bin
+  # Host tools:
+  gdb: C:/gnuarmemb/bin/arm-none-eabi-gdb.exe
+
+# Runner specific arguments
+args:
+  nrfjprog:
+    - --nrf-family=NRF91
+  jlink:
+    - --dt-flash=y
+    - --device=cortex-m33
+    - --speed=4000

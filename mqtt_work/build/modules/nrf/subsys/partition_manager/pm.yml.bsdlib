@@ -1,0 +1,4 @@
+bsdlib_sram:
+  placement: {after: [spm_sram, start]}
+  size: 0x10000
+  region: sram_primary

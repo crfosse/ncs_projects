@@ -1,0 +1,43 @@
+app:
+  address: 0xc000
+  region: flash_primary
+  size: 0xf4000
+bsdlib_sram:
+  address: 0x20010000
+  placement:
+    after:
+    - spm_sram
+    - start
+  region: sram_primary
+  size: 0x10000
+otp:
+  address: 0xff8108
+  region: otp
+  size: 0x2f4
+spm:
+  address: 0x0
+  placement:
+    before:
+    - app
+  region: flash_primary
+  size: 0xc000
+spm_sram:
+  address: 0x20000000
+  inside:
+  - sram_secure
+  placement:
+    after:
+    - start
+  region: sram_primary
+  size: 0x10000
+sram_primary:
+  address: 0x20020000
+  region: sram_primary
+  size: 0x20000
+sram_secure:
+  address: 0x20000000
+  orig_span: &id001
+  - spm_sram
+  region: sram_primary
+  size: 0x10000
+  span: *id001

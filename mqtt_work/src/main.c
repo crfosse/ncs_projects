@@ -1,0 +1,615 @@
+/*
+ * Copyright (c) 2018 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
+ */
+
+#include <zephyr.h>
+#include <stdio.h>
+#include <drivers/uart.h>
+#include <string.h>
+#include <random/rand32.h>
+#include <net/mqtt.h>
+#include <net/socket.h>
+#include <modem/lte_lc.h>
+
+#include <dk_buttons_and_leds.h>
+
+
+/* Buffers for MQTT client. */
+static uint8_t rx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
+static uint8_t tx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
+static uint8_t payload_buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE];
+
+/* The mqtt client struct */
+static struct mqtt_client client;
+
+/* MQTT Broker details. */
+static struct sockaddr_storage broker;
+
+/* File descriptor */
+static struct pollfd fds;
+
+/**** APPLICATION ADDITIONS ****/
+
+/* Test settings */
+#define SAMPLE_INTERVAL      1 //Seconds
+#define TRANSMISSION_INTERVAL 5 //Minutes
+
+struct k_work alarm_work;
+struct k_work periodic_work;
+
+/* semaphores */
+static K_SEM_DEFINE(mqtt_connect_ok, 0, 1);
+static K_SEM_DEFINE(mqtt_puback_ok, 0, 1);
+
+static K_MUTEX_DEFINE(fds_mutex);
+
+/* forward declarations */
+void app_connect(void);
+void app_disconnect(void);
+
+bool app_connected = false;
+
+// TEST_DATA_SIZE
+#define TEST_DATA_SIZE 100
+
+//255 random characters in an array for upload testing
+char * testData = "yK3vQHgUQ1WBUNPGprMSh0o1ZOTpGzC788DMB0OoQytSTDmKo7zeybWdx1DGh3SX"
+				  "IpfkYHSkX3hQuEUdWC8jWBq6qRAzv4NB79a";
+
+/**** END APPLICATION ADDITIONS ****/
+
+#if defined(CONFIG_BSD_LIBRARY)
+
+/**@brief Recoverable BSD library error. */
+void bsd_recoverable_error_handler(uint32_t err)
+{
+	printk("bsdlib recoverable error: %u\n", (unsigned int)err);
+}
+
+#endif /* defined(CONFIG_BSD_LIBRARY) */
+
+/**@brief Function to print strings without null-termination
+ */
+static void data_print(uint8_t *prefix, uint8_t *data, size_t len)
+{
+	char buf[len + 1];
+
+	memcpy(buf, data, len);
+	buf[len] = 0;
+	printk("%s%s\n", prefix, buf);
+}
+
+/**@brief Function to publish data on the configured topic
+ */
+static int data_publish(struct mqtt_client *c, enum mqtt_qos qos,
+	uint8_t *data, size_t len)
+{
+	struct mqtt_publish_param param;
+
+	param.message.topic.qos = qos;
+	param.message.topic.topic.utf8 = CONFIG_MQTT_PUB_TOPIC;
+	param.message.topic.topic.size = strlen(CONFIG_MQTT_PUB_TOPIC);
+	param.message.payload.data = data;
+	param.message.payload.len = len;
+	param.message_id = sys_rand32_get();
+	param.dup_flag = 0;
+	param.retain_flag = 0;
+
+	data_print("Publishing: ", data, len);
+	printk("to topic: %s len: %u\n",
+		CONFIG_MQTT_PUB_TOPIC,
+		(unsigned int)strlen(CONFIG_MQTT_PUB_TOPIC));
+
+	return mqtt_publish(c, &param);
+}
+
+/**@brief Function to subscribe to the configured topic
+ */
+static int subscribe(void)
+{
+	struct mqtt_topic subscribe_topic = {
+		.topic = {
+			.utf8 = CONFIG_MQTT_SUB_TOPIC,
+			.size = strlen(CONFIG_MQTT_SUB_TOPIC)
+		},
+		.qos = MQTT_QOS_1_AT_LEAST_ONCE
+	};
+
+	const struct mqtt_subscription_list subscription_list = {
+		.list = &subscribe_topic,
+		.list_count = 1,
+		.message_id = 1234
+	};
+
+	printk("Subscribing to: %s len %u\n", CONFIG_MQTT_SUB_TOPIC,
+		(unsigned int)strlen(CONFIG_MQTT_SUB_TOPIC));
+
+	return mqtt_subscribe(&client, &subscription_list);
+}
+
+/**@brief Function to read the published payload.
+ */
+static int publish_get_payload(struct mqtt_client *c, size_t length)
+{
+	uint8_t *buf = payload_buf;
+	uint8_t *end = buf + length;
+
+	if (length > sizeof(payload_buf)) {
+		return -EMSGSIZE;
+	}
+
+	while (buf < end) {
+		int ret = mqtt_read_publish_payload(c, buf, end - buf);
+
+		if (ret < 0) {
+			int err;
+
+			if (ret != -EAGAIN) {
+				return ret;
+			}
+
+			printk("mqtt_read_publish_payload: EAGAIN\n");
+
+			err = poll(&fds, 1,
+				   CONFIG_MQTT_KEEPALIVE * MSEC_PER_SEC);
+			if (err > 0 && (fds.revents & POLLIN) == POLLIN) {
+				continue;
+			} else {
+				return -EIO;
+			}
+		}
+
+		if (ret == 0) {
+			return -EIO;
+		}
+
+		buf += ret;
+	}
+
+	return 0;
+}
+
+/**@brief MQTT client event handler
+ */
+void mqtt_evt_handler(struct mqtt_client *const c,
+		      const struct mqtt_evt *evt)
+{
+	int err;
+
+	switch (evt->type) {
+	case MQTT_EVT_CONNACK:
+		if (evt->result != 0) {
+			printk("MQTT connect failed %d\n", evt->result);
+			break;
+		}
+
+		k_sem_give(&mqtt_connect_ok);
+		printk("[%s:%d] MQTT client connected!\n", __func__, __LINE__);
+		//subscribe();
+		break;
+
+	case MQTT_EVT_DISCONNECT:
+		printk("[%s:%d] MQTT client disconnected %d\n", __func__,
+		       __LINE__, evt->result);
+
+		break;
+
+	case MQTT_EVT_PUBLISH: {
+		const struct mqtt_publish_param *p = &evt->param.publish;
+
+		printk("[%s:%d] MQTT PUBLISH result=%d len=%d\n", __func__,
+		       __LINE__, evt->result, p->message.payload.len);
+		err = publish_get_payload(c, p->message.payload.len);
+		if (err >= 0) {
+			data_print("Received: ", payload_buf,
+				p->message.payload.len);
+		} else {
+			printk("mqtt_read_publish_payload: Failed! %d\n", err);
+			printk("Disconnecting MQTT client...\n");
+
+			err = mqtt_disconnect(c);
+			if (err) {
+				printk("Could not app_disconnect: %d\n", err);
+			}
+		}
+	} break;
+
+	case MQTT_EVT_PUBACK:
+		if (evt->result != 0) {
+			printk("MQTT PUBACK error %d\n", evt->result);
+			break;
+		}
+
+		k_sem_give(&mqtt_puback_ok);
+
+		printk("[%s:%d] PUBACK packet id: %u\n", __func__, __LINE__,
+				evt->param.puback.message_id);
+		break;
+
+	case MQTT_EVT_SUBACK:
+		if (evt->result != 0) {
+			printk("MQTT SUBACK error %d\n", evt->result);
+			break;
+		}
+
+		printk("[%s:%d] SUBACK packet id: %u\n", __func__, __LINE__,
+				evt->param.suback.message_id);
+		break;
+
+	default:
+		printk("[%s:%d] default: %d\n", __func__, __LINE__,
+				evt->type);
+		break;
+	}
+}
+
+/**@brief Resolves the configured hostname and
+ * initializes the MQTT broker structure
+ */
+static void broker_init(void)
+{
+	int err;
+	struct addrinfo *result;
+	struct addrinfo *addr;
+	struct addrinfo hints = {
+		.ai_family = AF_INET,
+		.ai_socktype = SOCK_STREAM
+	};
+
+	err = getaddrinfo(CONFIG_MQTT_BROKER_HOSTNAME, NULL, &hints, &result);
+	if (err) {
+		printk("ERROR: getaddrinfo failed %d\n", err);
+
+		return;
+	}
+
+	addr = result;
+	err = -ENOENT;
+
+	/* Look for address of the broker. */
+	while (addr != NULL) {
+		/* IPv4 Address. */
+		if (addr->ai_addrlen == sizeof(struct sockaddr_in)) {
+			struct sockaddr_in *broker4 =
+				((struct sockaddr_in *)&broker);
+			char ipv4_addr[NET_IPV4_ADDR_LEN];
+
+			broker4->sin_addr.s_addr =
+				((struct sockaddr_in *)addr->ai_addr)
+				->sin_addr.s_addr;
+			broker4->sin_family = AF_INET;
+			broker4->sin_port = htons(CONFIG_MQTT_BROKER_PORT);
+
+			inet_ntop(AF_INET, &broker4->sin_addr.s_addr,
+				  ipv4_addr, sizeof(ipv4_addr));
+			printk("IPv4 Address found %s\n", ipv4_addr);
+
+			break;
+		} else {
+			printk("ai_addrlen = %u should be %u or %u\n",
+				(unsigned int)addr->ai_addrlen,
+				(unsigned int)sizeof(struct sockaddr_in),
+				(unsigned int)sizeof(struct sockaddr_in6));
+		}
+
+		addr = addr->ai_next;
+		break;
+	}
+
+	/* Free the address. */
+	freeaddrinfo(result);
+}
+
+/**@brief Initialize the MQTT client structure
+ * DEV: Modified - Moved broker_init out.
+ */
+static void client_init(struct mqtt_client *client)
+{
+	mqtt_client_init(client);
+
+	broker_init();
+
+	/* MQTT client configuration */
+	client->broker = &broker;
+	client->evt_cb = mqtt_evt_handler;
+	client->client_id.utf8 = (uint8_t *)CONFIG_MQTT_CLIENT_ID;
+	client->client_id.size = strlen(CONFIG_MQTT_CLIENT_ID);
+	client->password = NULL;
+	client->user_name = NULL;
+	client->protocol_version = MQTT_VERSION_3_1_1;
+
+	/* MQTT buffers configuration */
+	client->rx_buf = rx_buffer;
+	client->rx_buf_size = sizeof(rx_buffer);
+	client->tx_buf = tx_buffer;
+	client->tx_buf_size = sizeof(tx_buffer);
+
+	/* MQTT transport configuration */
+#if defined(CONFIG_MQTT_LIB_TLS)
+	client->transport.type = MQTT_TRANSPORT_SECURE;
+#else
+	client->transport.type = MQTT_TRANSPORT_NON_SECURE;
+#endif
+}
+
+/**@brief Initialize the file descriptor structure used by poll.
+ */
+static int fds_init(struct mqtt_client *c)
+{
+	if (c->transport.type == MQTT_TRANSPORT_NON_SECURE) {
+		fds.fd = c->transport.tcp.sock;
+	} else {
+#if defined(CONFIG_MQTT_LIB_TLS)
+		fds.fd = c->transport.tls.sock;
+#else
+		return -ENOTSUP;
+#endif
+	}
+
+	fds.events = POLLIN;
+
+	return 0;
+}
+
+/**@brief Configures modem to provide LTE link. Blocks until link is
+ * successfully established.
+ */
+static void modem_configure(void)
+{
+#if defined(CONFIG_LTE_LINK_CONTROL)
+	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
+		/* Do nothing, modem is already turned on
+		 * and connected.
+		 */
+	} else {
+		int err;
+
+		printk("LTE Link Connecting ...\n");
+		err = lte_lc_init_and_connect();
+		__ASSERT(err == 0, "LTE link could not be established.");
+		printk("LTE Link Connected!\n");
+	}
+#endif /* defined(CONFIG_LTE_LINK_CONTROL) */
+}
+
+/**** Application Code ****/
+
+/* @brief returns a random "sample"*/
+static uint8_t sensor_data_get() {
+	uint8_t random_sample;
+	
+	random_sample = sys_rand32_get() % 255;
+
+	return random_sample;
+}
+
+/**@brief Callback for button events from the DK buttons and LEDs library. 
+*  Can be used to simulate alarm events.
+*/
+
+static void button_handler(uint32_t button_states, uint32_t has_changed)
+{
+	if (has_changed & button_states & DK_BTN1_MSK) {
+		printk("DEV_DBG: button 1 pressed\n");
+		k_work_submit(&alarm_work);
+	}
+	else if (has_changed & button_states & DK_BTN2_MSK) {
+	
+	}
+
+	return;
+}
+
+/**@brief Initializes buttons and LEDs, using the DK buttons and LEDs
+ * library.
+ */
+static void buttons_leds_init(void)
+{
+	int err;
+
+	printk("DEV_DBG: Initalizing buttons and leds.\n");
+
+	err = dk_buttons_init(button_handler);
+	if (err) {
+		printk("Could not initialize buttons, err code: %d\n", err);
+	}
+
+	err = dk_leds_init();
+	if (err) {
+		printk("Could not initialize leds, err code: %d\n", err);
+	}
+
+	err = dk_set_leds_state(DK_ALL_LEDS_MSK, DK_NO_LEDS_MSK);
+	if (err) {
+		printk("Could not set leds state, err code: %d\n", err);
+	}
+}
+
+/* @brief triggers every minute. Publish work if one period has passed */ 
+void app_timer_handler(struct k_timer *dummy)
+{
+	static uint32_t minutes;
+
+	minutes++;
+	/* This shall match the PSM interval*/
+	if (minutes % TRANSMISSION_INTERVAL == 0) {\
+		k_work_submit(&periodic_work);
+	}
+	printk("Elapsed time: %d\n", minutes);
+}
+
+K_TIMER_DEFINE(app_timer, app_timer_handler, NULL);
+
+/* @brief initializes timer that triggers every minute */
+void timer_init(void)
+{
+	k_timer_start(&app_timer, K_MINUTES(1), K_MINUTES(1));
+}
+
+void publish_samples(struct k_work *item) {
+	app_connect();
+
+	printk("DEV: Publish Samples");
+	//Lighting LED2 to indicate that transmission is initiated
+	dk_set_led(DK_LED2, 0);
+	
+	//Data upload
+	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, testData, TEST_DATA_SIZE);
+		
+	k_sleep(K_SECONDS(SAMPLE_INTERVAL));
+	
+	//Transmission phase over.
+	dk_set_led(DK_LED2, 1);
+
+	app_disconnect();
+}
+
+void publish_alarm(struct k_work *item) {
+	app_connect();
+	printk("DEV: Publish alarm\n");
+
+	//Lighting LED2 to indicate that transmission is initiated
+	dk_set_led(DK_LED2, 0);
+	
+	//Data upload
+	uint8_t curr_sample = sensor_data_get();
+	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, &curr_sample, 1);
+	
+	
+	k_sem_take(&mqtt_puback_ok, K_FOREVER);
+	
+	//Transmission phase over.
+	dk_set_led(DK_LED2, 1);
+	app_disconnect();
+}
+
+void app_connect(void) {
+	printk("Connecting\n");
+	int err;
+
+	err = lte_lc_normal();
+	if(err) {
+		printk("LTE: Normal mode failed\n");
+	}
+
+	err = mqtt_connect(&client);
+	if (err != 0) {
+		printk("ERROR: mqtt_connect %d\n", err);
+		return;
+	}
+
+	err = fds_init(&client);
+	if (err != 0) {
+		printk("ERROR: fds_init %d\n", err);
+		return;
+	}
+	app_connected = true;
+
+	/* Wait for connection to finish */
+	k_sem_take(&mqtt_connect_ok, K_FOREVER);
+}
+
+void app_disconnect(void) {
+	printk("Disconnecting\n");
+	int err;
+
+	app_connected = 0;
+
+	err = lte_lc_offline();
+	if(err) {
+		printk("LTE: Offline mode failed\n");
+	}
+
+	err = mqtt_disconnect(&client);
+	if (err != 0) {
+		printk("ERROR: mqtt_connect %d\n", err);
+		return;
+	}
+	printk("MQTT: disconnected\n");
+
+	/*err = lte_lc_offline();
+	if(err) {
+		printk("LTE: Flight mode failed\n");
+	}
+
+	printk("LTE: offline\n");*/
+}
+
+void init_work_items(void) {
+	k_work_init(&alarm_work, publish_alarm);
+	k_work_init(&periodic_work, publish_samples);
+}
+
+void main(void)
+{
+	int err;
+
+    printk("MQTT gas sensor application example started\n");
+
+	modem_configure();
+
+	client_init(&client);
+
+	//app_connect();
+
+	buttons_leds_init();
+	timer_init();
+	init_work_items();
+	
+	err = lte_lc_offline();
+	if(err) {
+		printk("LTE: Offline mode failed\n");
+	}
+
+
+	//Lighting LED1 to indicate that the application is connected and enterin main loop.
+	dk_set_led(DK_LED1, 0);
+
+	while (1) {
+		if(app_connected) {
+			err = poll(&fds, 1, mqtt_keepalive_time_left(&client));
+			if (err < 0) {
+				printk("ERROR: poll %d\n", errno);
+				break;
+			}
+
+			err = mqtt_live(&client);
+			if ((err != 0) && (err != -EAGAIN)) {
+				printk("ERROR: mqtt_live %d\n", err);
+				break;
+			}
+
+			if ((fds.revents & POLLIN) == POLLIN) {
+				err = mqtt_input(&client);
+				if (err != 0) {
+					printk("ERROR: mqtt_input %d\n", err);
+					continue;
+				}
+			}
+
+			if ((fds.revents & POLLERR) == POLLERR) {
+				printk("POLLERR\n");
+				break;
+			}
+
+			if ((fds.revents & POLLNVAL) == POLLNVAL) {
+				printk("POLLNVAL\n");
+				break;
+			}
+		} else
+		{
+			k_sleep(K_SECONDS(1));
+		}
+		
+		
+	}
+
+	printk("Disconnecting MQTT client...\n");
+
+	err = mqtt_disconnect(&client);
+	if (err) {
+		printk("Could not disconnect MQTT client. Error: %d\n", err);
+	}
+}
