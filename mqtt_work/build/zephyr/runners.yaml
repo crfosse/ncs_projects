@@ -14,7 +14,7 @@ config:
   board_dir: C:/Users/cafo/ncs/my_ncs/ncs/zephyr/boards/arm/nrf9160dk_nrf9160
   # Build outputs:
   elf_file: zephyr.elf
-  hex_file: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/zephyr/merged.hex
+  hex_file: C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/merged.hex
   bin_file: zephyr.bin
   # Host tools:
   gdb: C:/gnuarmemb/bin/arm-none-eabi-gdb.exe

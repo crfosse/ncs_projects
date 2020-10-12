@@ -39,9 +39,9 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/zephyr/subsys/net/l2/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/zephyr/subsys/net/ip/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/zephyr/subsys/net/lib/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/subsys/net/l2/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/subsys/net/ip/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/subsys/net/lib/cmake_install.cmake")
 
 endif()
 

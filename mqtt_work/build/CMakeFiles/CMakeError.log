@@ -22,29 +22,3 @@ exit.c:(.text.exit+0x2c): undefined reference to `_exit'
 collect2.exe: error: ld returned 1 exit status
 
 
-Performing C SOURCE FILE Test check_mstack_protector_guard_global_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 failed with the following output:
-Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
-
-Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_84c13 && [1/2] Building C object CMakeFiles/cmTC_84c13.dir/src.c.obj
-FAILED: CMakeFiles/cmTC_84c13.dir/src.c.obj 
-C:\gnuarmemb\bin\arm-none-eabi-gcc.exe   -Dcheck_mstack_protector_guard_global_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 -nostartfiles -nostdlib -isystem "c:/gnuarmemb/bin/../lib/gcc/arm-none-eabi/9.3.1/include" -isystem "c:/gnuarmemb/bin/../lib/gcc/arm-none-eabi/9.3.1/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -mstack-protector-guard=global -o CMakeFiles/cmTC_84c13.dir/src.c.obj -c src.c
-arm-none-eabi-gcc.exe: error: unrecognized command line option '-mstack-protector-guard=global'; did you mean '-fstack-protector-all'?
-ninja: build stopped: subcommand failed.
-
-
-Source file was:
-int main(void) { return 0; }
-Performing C SOURCE FILE Test check_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__lasan failed with the following output:
-Change Dir: C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/CMakeFiles/CMakeTmp
-
-Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_db189 && [1/2] Building C object CMakeFiles/cmTC_db189.dir/src.c.obj
-[2/2] Linking C executable cmTC_db189
-FAILED: cmTC_db189 
-cmd.exe /C "cd . && C:\gnuarmemb\bin\arm-none-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include___isystem__c__gnuarmemb_bin____lib_gcc_arm_none_eabi_9_3_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__lasan -nostartfiles -nostdlib -isystem "c:/gnuarmemb/bin/../lib/gcc/arm-none-eabi/9.3.1/include" -isystem "c:/gnuarmemb/bin/../lib/gcc/arm-none-eabi/9.3.1/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -lasan  CMakeFiles/cmTC_db189.dir/src.c.obj -o cmTC_db189   && cd ."
-c:/gnuarmemb/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/bin/ld.exe: cannot find -lasan
-collect2.exe: error: ld returned 1 exit status
-ninja: build stopped: subcommand failed.
-
-
-Source file was:
-int main(void) { return 0; }

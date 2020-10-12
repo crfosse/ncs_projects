@@ -39,12 +39,12 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/spm/zephyr/drivers/console/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/spm/zephyr/drivers/interrupt_controller/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/spm/zephyr/drivers/pcie/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/spm/zephyr/drivers/clock_control/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/spm/zephyr/drivers/serial/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/spm/zephyr/drivers/timer/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/spm/zephyr/drivers/console/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/spm/zephyr/drivers/interrupt_controller/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/spm/zephyr/drivers/pcie/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/spm/zephyr/drivers/clock_control/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/spm/zephyr/drivers/serial/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/spm/zephyr/drivers/timer/cmake_install.cmake")
 
 endif()
 

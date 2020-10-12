@@ -39,11 +39,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/modules/nrf/drivers/net/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/modules/nrf/drivers/hw_cc310/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/modules/nrf/drivers/entropy/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/modules/nrf/drivers/gps/cmake_install.cmake")
-  include("C:/Users/cafo/ncs/my_ncs/ncs/00my_apps/mqtt_work/build/modules/nrf/drivers/serial/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/drivers/net/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/drivers/hw_cc310/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/drivers/entropy/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/drivers/gps/cmake_install.cmake")
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/drivers/serial/cmake_install.cmake")
 
 endif()
 

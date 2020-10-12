@@ -37,3 +37,9 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "C:/gnuarmemb/bin/arm-none-eabi-objdump.exe")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for each subdirectory.
+  include("C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/ext/cjson/cmake_install.cmake")
+
+endif()
+

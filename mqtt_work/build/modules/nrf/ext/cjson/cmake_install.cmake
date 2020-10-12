@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/cafo/ncs/my_ncs/ncs/zephyr/lib/libc/minimal
+# Install script for directory: C:/Users/cafo/ncs/my_ncs/ncs/nrf/ext/cjson
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

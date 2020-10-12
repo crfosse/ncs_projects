@@ -12,6 +12,9 @@
 #include <net/mqtt.h>
 #include <net/socket.h>
 #include <modem/lte_lc.h>
+#include <date_time.h>
+#include <stdio.h>
+#include <cJSON.h>
 
 #include <dk_buttons_and_leds.h>
 
@@ -30,35 +33,49 @@ static struct sockaddr_storage broker;
 /* File descriptor */
 static struct pollfd fds;
 
-/**** APPLICATION ADDITIONS ****/
+/**** APPLICATION ADDITIONS - Start ****/
 
 /* Test settings */
-#define SAMPLE_INTERVAL      1 //Seconds
-#define TRANSMISSION_INTERVAL 5 //Minutes
+#define SAMPLE_INTERVAL      1  //Seconds - in this application the sample interval only describes how long main sleeps between wakeups when not connected
+#define TRANSMISSION_INTERVAL 5 //Minutes - how often the timer fires to transmit samples
 
+/* Work queue and items */
+#define APP_STACK_SIZE 4096
+#define WORK_PRIORITY 5
+
+K_THREAD_STACK_DEFINE(app_stack_area, APP_STACK_SIZE);
+
+struct k_work_q app_work_q;
 struct k_work alarm_work;
 struct k_work periodic_work;
 
-/* semaphores */
+/* semaphores for real time control*/
 static K_SEM_DEFINE(mqtt_connect_ok, 0, 1);
 static K_SEM_DEFINE(mqtt_puback_ok, 0, 1);
+static K_SEM_DEFINE(date_time_ok, 0, 1);
 
-static K_MUTEX_DEFINE(fds_mutex);
+/* Types of messages transmitted by the application */
+enum app_msg_type {
+	SENSOR_ALARM,
+	SENSOR_SAMPLE
+};
 
 /* forward declarations */
 void app_connect(void);
 void app_disconnect(void);
+void create_message(char* destination, enum app_msg_type type, uint8_t* data, size_t len, int64_t * timestamp);
 
+/* Connection status (should be mutex protected?) */
 bool app_connected = false;
 
 // TEST_DATA_SIZE
 #define TEST_DATA_SIZE 100
 
 //255 random characters in an array for upload testing
-char * testData = "yK3vQHgUQ1WBUNPGprMSh0o1ZOTpGzC788DMB0OoQytSTDmKo7zeybWdx1DGh3SX"
+uint8_t * testData = "yK3vQHgUQ1WBUNPGprMSh0o1ZOTpGzC788DMB0OoQytSTDmKo7zeybWdx1DGh3SX"
 				  "IpfkYHSkX3hQuEUdWC8jWBq6qRAzv4NB79a";
 
-/**** END APPLICATION ADDITIONS ****/
+/**** APPLICATION ADDITIONS - End ****/
 
 #if defined(CONFIG_BSD_LIBRARY)
 
@@ -107,6 +124,7 @@ static int data_publish(struct mqtt_client *c, enum mqtt_qos qos,
 
 /**@brief Function to subscribe to the configured topic
  */
+/*
 static int subscribe(void)
 {
 	struct mqtt_topic subscribe_topic = {
@@ -128,6 +146,7 @@ static int subscribe(void)
 
 	return mqtt_subscribe(&client, &subscription_list);
 }
+*/
 
 /**@brief Function to read the published payload.
  */
@@ -374,16 +393,7 @@ static void modem_configure(void)
 #endif /* defined(CONFIG_LTE_LINK_CONTROL) */
 }
 
-/**** Application Code ****/
-
-/* @brief returns a random "sample"*/
-static uint8_t sensor_data_get() {
-	uint8_t random_sample;
-	
-	random_sample = sys_rand32_get() % 255;
-
-	return random_sample;
-}
+/**** Application code - Start ****/
 
 /**@brief Callback for button events from the DK buttons and LEDs library. 
 *  Can be used to simulate alarm events.
@@ -393,7 +403,7 @@ static void button_handler(uint32_t button_states, uint32_t has_changed)
 {
 	if (has_changed & button_states & DK_BTN1_MSK) {
 		printk("DEV_DBG: button 1 pressed\n");
-		k_work_submit(&alarm_work);
+		k_work_submit_to_queue(&app_work_q, &alarm_work);
 	}
 	else if (has_changed & button_states & DK_BTN2_MSK) {
 	
@@ -434,8 +444,9 @@ void app_timer_handler(struct k_timer *dummy)
 
 	minutes++;
 	/* This shall match the PSM interval*/
-	if (minutes % TRANSMISSION_INTERVAL == 0) {\
-		k_work_submit(&periodic_work);
+	if (minutes % TRANSMISSION_INTERVAL == 0) {
+		printk("Timer: fired sample interval\n");
+		k_work_submit_to_queue(&app_work_q, &periodic_work);
 	}
 	printk("Elapsed time: %d\n", minutes);
 }
@@ -451,14 +462,23 @@ void timer_init(void)
 void publish_samples(struct k_work *item) {
 	app_connect();
 
-	printk("DEV: Publish Samples");
+	printk("DEV: Publish Samples\n");
 	//Lighting LED2 to indicate that transmission is initiated
 	dk_set_led(DK_LED2, 0);
 	
-	//Data upload
-	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, testData, TEST_DATA_SIZE);
+	//Get timestamp
+	int64_t curr_time;
+	date_time_now(&curr_time);
+
+	//Format JSON message
+	char message[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
+	create_message(message, SENSOR_SAMPLE, testData, TEST_DATA_SIZE, &curr_time);
+
+	//Publish message
+	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message, sizeof(message));
 		
-	k_sleep(K_SECONDS(SAMPLE_INTERVAL));
+	//Wait for publish acknowledgement
+	k_sem_take(&mqtt_puback_ok, K_FOREVER);
 	
 	//Transmission phase over.
 	dk_set_led(DK_LED2, 1);
@@ -473,11 +493,21 @@ void publish_alarm(struct k_work *item) {
 	//Lighting LED2 to indicate that transmission is initiated
 	dk_set_led(DK_LED2, 0);
 	
-	//Data upload
-	uint8_t curr_sample = sensor_data_get();
-	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, &curr_sample, 1);
+	//Sample simulator
+	uint8_t * curr_sample = "x";
+
+	//Get timestamp
+	int64_t curr_time;
+	date_time_now(&curr_time);
+
+	//Create JSON formatted message
+	char message[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
+	create_message(message, SENSOR_ALARM, curr_sample, 1, &curr_time);
+
+	//Publish message
+	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message, sizeof(message));
 	
-	
+	//Wait for publish acknowledgement
 	k_sem_take(&mqtt_puback_ok, K_FOREVER);
 	
 	//Transmission phase over.
@@ -489,10 +519,12 @@ void app_connect(void) {
 	printk("Connecting\n");
 	int err;
 
-	err = lte_lc_normal();
+	err = lte_lc_connect();
 	if(err) {
-		printk("LTE: Normal mode failed\n");
+		printk("LTE: Connection failed\n");
 	}
+
+	printk("LTE: Link connected\n");
 
 	err = mqtt_connect(&client);
 	if (err != 0) {
@@ -517,11 +549,6 @@ void app_disconnect(void) {
 
 	app_connected = 0;
 
-	err = lte_lc_offline();
-	if(err) {
-		printk("LTE: Offline mode failed\n");
-	}
-
 	err = mqtt_disconnect(&client);
 	if (err != 0) {
 		printk("ERROR: mqtt_connect %d\n", err);
@@ -529,34 +556,88 @@ void app_disconnect(void) {
 	}
 	printk("MQTT: disconnected\n");
 
-	/*err = lte_lc_offline();
+	err = lte_lc_offline();
 	if(err) {
-		printk("LTE: Flight mode failed\n");
+		printk("LTE: Offline mode failed\n");
 	}
-
-	printk("LTE: offline\n");*/
+	printk("LTE: offline\n");
 }
 
-void init_work_items(void) {
+void init_work(void) {
+	k_work_q_start(&app_work_q, app_stack_area, K_THREAD_STACK_SIZEOF(app_stack_area), WORK_PRIORITY);
+
 	k_work_init(&alarm_work, publish_alarm);
 	k_work_init(&periodic_work, publish_samples);
 }
+
+void date_time_handler(const struct date_time_evt *evt) {
+
+	switch (evt->type)
+	{
+	case DATE_TIME_OBTAINED_MODEM:
+		printk("DATE_TIME: got time from modem.\n");
+		k_sem_give(&date_time_ok);
+		break;
+	case DATE_TIME_OBTAINED_NTP:
+		printk("DATE_TIME: got time from NTP.\n");
+		k_sem_give(&date_time_ok);
+		break;
+	case DATE_TIME_OBTAINED_EXT:
+		printk("DATE_TIME: got time from external.\n");
+		k_sem_give(&date_time_ok);
+		break;
+	case DATE_TIME_NOT_OBTAINED:
+		printk("DATE_TIME: failed to get time.\n");
+		k_sem_give(&date_time_ok);
+		break;
+	default:
+		break;
+	}
+}
+
+void create_message(char* destination, enum app_msg_type type, uint8_t *data, size_t len, int64_t *timestamp) {
+
+	cJSON *message;
+
+	message = cJSON_CreateObject();
+	
+	if(type == SENSOR_ALARM) {
+		cJSON_AddStringToObject(message, "type", "alarm");
+	} else {
+		cJSON_AddStringToObject(message, "type", "periodic sample");
+	}
+
+	char time_str[16];
+	snprintf(time_str, 16, "%lld", *timestamp);
+
+	char data_str[len];
+	snprintf(data_str, len, "%s", data);
+
+	cJSON_AddStringToObject(message, "timestamp", time_str);
+	cJSON_AddStringToObject(message, "data", data);
+
+	strcpy(destination, cJSON_Print(message));
+
+	cJSON_Delete(message);
+}
+
+/**** Application code - End ****/
 
 void main(void)
 {
 	int err;
 
-    printk("MQTT gas sensor application example started\n");
+    printk("MQTT sensor application example started\n");
 
 	modem_configure();
+	date_time_update_async(date_time_handler);
+	k_sem_take(&date_time_ok,K_FOREVER);
 
 	client_init(&client);
 
-	//app_connect();
-
-	buttons_leds_init();
-	timer_init();
-	init_work_items();
+	buttons_leds_init(); /* Button for "alarm simulation" and leds for control */
+	timer_init(); /* Periodic sample timer */
+	init_work();  /* Work queue and items for sampling and alarm */
 	
 	err = lte_lc_offline();
 	if(err) {
@@ -564,7 +645,7 @@ void main(void)
 	}
 
 
-	//Lighting LED1 to indicate that the application is connected and enterin main loop.
+	//Lighting LED1 to indicate that the application entering main loop.
 	dk_set_led(DK_LED1, 0);
 
 	while (1) {
@@ -574,36 +655,37 @@ void main(void)
 				printk("ERROR: poll %d\n", errno);
 				break;
 			}
+			/* Check if the app is still connected, as it can be disconnnected
+			 * during poll. */
+			if(app_connected) { 
+				err = mqtt_live(&client);
+				if ((err != 0) && (err != -EAGAIN)) {
+					printk("ERROR: mqtt_live %d\n", err);
+					break;
+				}
 
-			err = mqtt_live(&client);
-			if ((err != 0) && (err != -EAGAIN)) {
-				printk("ERROR: mqtt_live %d\n", err);
-				break;
-			}
+				if ((fds.revents & POLLIN) == POLLIN) {
+					err = mqtt_input(&client);
+					if (err != 0) {
+						printk("ERROR: mqtt_input %d\n", err);
+						continue;
+					}
+				}
 
-			if ((fds.revents & POLLIN) == POLLIN) {
-				err = mqtt_input(&client);
-				if (err != 0) {
-					printk("ERROR: mqtt_input %d\n", err);
+				if ((fds.revents & POLLERR) == POLLERR) {
+					printk("POLLERR\n");
+					break;
+				}
+
+				if ((fds.revents & POLLNVAL) == POLLNVAL) {
+					printk("POLLNVAL\n");
 					continue;
 				}
 			}
-
-			if ((fds.revents & POLLERR) == POLLERR) {
-				printk("POLLERR\n");
-				break;
-			}
-
-			if ((fds.revents & POLLNVAL) == POLLNVAL) {
-				printk("POLLNVAL\n");
-				break;
-			}
 		} else
 		{
-			k_sleep(K_SECONDS(1));
+			k_sleep(K_SECONDS(SAMPLE_INTERVAL));
 		}
-		
-		
 	}
 
 	printk("Disconnecting MQTT client...\n");

@@ -242,7 +242,7 @@ rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m__cmse_
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__lib__libc__minimal_
+rule C_COMPILER__lib__libc__newlib_
   depfile = $DEP_FILE
   deps = gcc
   command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -252,7 +252,7 @@ rule C_COMPILER__lib__libc__minimal_
 #############################################
 # Rule for linking C static library.
 
-rule C_STATIC_LIBRARY_LINKER__lib__libc__minimal_
+rule C_STATIC_LIBRARY_LINKER__lib__libc__newlib_
   command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
@@ -432,6 +432,25 @@ rule C_STATIC_LIBRARY_LINKER__drivers__entropy_
 #############################################
 # Rule for compiling C files.
 
+rule C_COMPILER__.2e.2e__nrf__ext__cjson_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__ext__cjson_
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
 rule C_COMPILER__.2e.2e__nrf__lib__bsdlib_
   depfile = $DEP_FILE
   deps = gcc
@@ -584,6 +603,25 @@ rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__lib__fatal_error_
 #############################################
 # Rule for compiling C files.
 
+rule C_COMPILER__.2e.2e__nrf__lib__date_time_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__lib__date_time_
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
 rule C_COMPILER__.2e.2e__nrf__subsys__fw_info_
   depfile = $DEP_FILE
   deps = gcc
@@ -642,7 +680,7 @@ rule C_STATIC_LIBRARY_LINKER__kernel_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\cafo\ncs\my_ncs\ncs\00my_apps\mqtt_work -BC:\Users\cafo\ncs\my_ncs\ncs\00my_apps\mqtt_work\build
+  command = "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work -BC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build
   description = Re-running CMake...
   generator = 1
 
