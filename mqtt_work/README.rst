@@ -8,5 +8,7 @@ A button press is used to simulate the alarm. Between uploads the modem is set t
 
 MQTT subscribe functionality is currently not tested/supported and is therefore commented out. 
 
-Possible improvements:
+Possible improvements: 
+
 - Add a check to see if alarm/sample work is already queued. Then reconnection and disconnection is uneccessary and it will waste power.
+- Power consumption measurement
