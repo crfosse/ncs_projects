@@ -72,8 +72,7 @@ bool app_connected = false;
 #define TEST_DATA_SIZE 100
 
 //255 random characters in an array for upload testing
-uint8_t * testData = "yK3vQHgUQ1WBUNPGprMSh0o1ZOTpGzC788DMB0OoQytSTDmKo7zeybWdx1DGh3SX"
-				  "IpfkYHSkX3hQuEUdWC8jWBq6qRAzv4NB79a";
+uint8_t * testData = "yK3vQHgUQ";
 
 /**** APPLICATION ADDITIONS - End ****/
 

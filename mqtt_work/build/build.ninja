@@ -2076,25 +2076,25 @@ build zephyr/boards/rebuild_cache: phony zephyr/boards/CMakeFiles/rebuild_cache.
 #############################################
 # Utility command for edit_cache
 
-build zephyr/boards/arm/nrf9160dk_nrf9160/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\zephyr\boards\arm\nrf9160dk_nrf9160 && "C:\Program Files\CMake\bin\cmake-gui.exe" -SC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work -BC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build"
+build zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\zephyr\boards\boards\arm\nrf9160dk_nrf9160ns && "C:\Program Files\CMake\bin\cmake-gui.exe" -SC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work -BC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
 
-build zephyr/boards/arm/nrf9160dk_nrf9160/edit_cache: phony zephyr/boards/arm/nrf9160dk_nrf9160/CMakeFiles/edit_cache.util
+build zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/edit_cache: phony zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/CMakeFiles/edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build zephyr/boards/arm/nrf9160dk_nrf9160/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\zephyr\boards\arm\nrf9160dk_nrf9160 && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work -BC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build"
+build zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\zephyr\boards\boards\arm\nrf9160dk_nrf9160ns && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work -BC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build zephyr/boards/arm/nrf9160dk_nrf9160/rebuild_cache: phony zephyr/boards/arm/nrf9160dk_nrf9160/CMakeFiles/rebuild_cache.util
+build zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/rebuild_cache: phony zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/CMakeFiles/rebuild_cache.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -6746,14 +6746,14 @@ build zephyr/arch/common/all: phony zephyr/arch/common/libarch__common.a zephyr/
 #############################################
 # Folder: C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards
 
-build zephyr/boards/all: phony zephyr/boards/arm/nrf9160dk_nrf9160/all
+build zephyr/boards/all: phony zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/all
 
 # =============================================================================
 
 #############################################
-# Folder: C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/arm/nrf9160dk_nrf9160
+# Folder: C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/boards/arm/nrf9160dk_nrf9160ns
 
-build zephyr/boards/arm/nrf9160dk_nrf9160/all: phony
+build zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/all: phony
 
 # =============================================================================
 

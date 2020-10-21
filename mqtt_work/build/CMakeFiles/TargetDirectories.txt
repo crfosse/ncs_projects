@@ -79,8 +79,8 @@ C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/soc/arm/nordic_
 C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/soc/arm/nordic_nrf/nrf91/CMakeFiles/rebuild_cache.dir
 C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/CMakeFiles/edit_cache.dir
 C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/CMakeFiles/rebuild_cache.dir
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/arm/nrf9160dk_nrf9160/CMakeFiles/edit_cache.dir
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/arm/nrf9160dk_nrf9160/CMakeFiles/rebuild_cache.dir
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/CMakeFiles/edit_cache.dir
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/boards/boards/arm/nrf9160dk_nrf9160ns/CMakeFiles/rebuild_cache.dir
 C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/subsys/CMakeFiles/edit_cache.dir
 C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/subsys/CMakeFiles/rebuild_cache.dir
 C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/zephyr/subsys/debug/CMakeFiles/edit_cache.dir

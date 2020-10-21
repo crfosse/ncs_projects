@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/CMakeFiles/spm_subimage"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/CMakeFiles/spm_subimage.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/CMakeFiles/spm_subimage-complete.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-install.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-download.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-update.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-patch.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-configure.rule"
+		},
+		{
+			"file" : "C:/Users/cafo/ncs/v1.3.0/app/adc/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"spm_subimage"
+		],
+		"name" : "spm_subimage"
+	}
+}
