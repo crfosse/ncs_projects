@@ -40,6 +40,7 @@ static struct device *uart;
 static bool rx_disabled;
 
 K_SEM_DEFINE(nus_write_sem, 0, 1);
+static K_SEM_DEFINE(ble_connect_ok, 0, 2);
 
 struct uart_data_t {
 	void *fifo_reserved;
@@ -264,6 +265,9 @@ static void connected(struct bt_conn *conn, u8_t conn_err)
 	if ((!err) && (err != -EALREADY)) {
 		printk("Stop LE scan failed (err %d)\n", err);
 	}
+
+	k_sem_give(&ble_connect_ok);
+
 }
 
 static void disconnected(struct bt_conn *conn, u8_t reason)
@@ -487,20 +491,28 @@ void main(void)
 	}
 	printk("Scanning successfully started\n");
 
+	k_sem_take(&ble_connect_ok, K_FOREVER);
+
 	for (;;) {
 		/* Wait indefinitely for data to be sent over Bluetooth */
 		struct uart_data_t *buf = k_fifo_get(&fifo_uart_rx_data,
 						     K_FOREVER);
 
-		err = bt_gatt_nus_c_send(&gatt_nus_c, buf->data, buf->len);
-		if (err) {
-			printk("Failed to send data over BLE connection"
-			       "(err %d)\n", err);
+		if (bt_gatt_nus_c_send(NULL, "0123456789", 10)) {
+			printk("Failed to send data over BLE connection\n");
+			break;
+		} else {
+			msg_cnt++;
+			if (!(msg_cnt%100)) {
+				printk("%d messages sucessfully transmitted.\n", msg_cnt);
+			}
 		}
 
 		err = k_sem_take(&nus_write_sem, NUS_WRITE_TIMEOUT);
 		if (err) {
 			printk("NUS send timeout\n");
 		}
+
+		k_sleep(K_MSEC(8));
 	}
 }

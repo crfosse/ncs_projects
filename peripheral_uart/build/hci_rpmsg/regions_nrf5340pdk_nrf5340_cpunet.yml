@@ -1,7 +1,0 @@
-flash_primary:
-  base_address: 0x1000000
-  device: NRF_FLASH_DRV_NAME
-  dynamic_partition: hci_rpmsg
-  name: flash_primary
-  placement_strategy: complex
-  size: 0x40000
