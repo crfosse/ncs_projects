@@ -1,0 +1,52 @@
+The target system is: Generic - 2.3.0 - arm
+The host system is: Windows - 10.0.18363 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: C:/gnuarmemb/bin/arm-none-eabi-gcc.exe 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+
+The C compiler identification is GNU, found in "C:/Users/cafo/ncs/v1.3.1/nrf/samples/bluetooth/peripheral_uart/build/hci_rpmsg/CMakeFiles/3.18.1/CompilerIdC/CMakeCCompilerId.o"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: C:/gnuarmemb/bin/arm-none-eabi-gcc.exe 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+
+The CXX compiler identification is GNU, found in "C:/Users/cafo/ncs/v1.3.1/nrf/samples/bluetooth/peripheral_uart/build/hci_rpmsg/CMakeFiles/3.18.1/CompilerIdCXX/CMakeCXXCompilerId.o"
+
+Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+arm-none-eabi-gcc.exe (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Determining if files stdatomic.h exist passed with the following output:
+Change Dir: C:/Users/cafo/ncs/v1.3.1/nrf/samples/bluetooth/peripheral_uart/build/hci_rpmsg/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_5d71c && [1/2] Building C object CMakeFiles/cmTC_5d71c.dir/HAVE_STDATOMIC_H.c.obj
+[2/2] Linking C executable cmTC_5d71c
+arm-none-eabi-gcc.exe: warning: CMakeFiles/cmTC_5d71c.dir/HAVE_STDATOMIC_H.c.obj: linker input file unused because linking not done
+
+
+
+Determining if files fcntl.h exist passed with the following output:
+Change Dir: C:/Users/cafo/ncs/v1.3.1/nrf/samples/bluetooth/peripheral_uart/build/hci_rpmsg/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/ProgramData/chocolatey/bin/ninja.exe cmTC_6d4f1 && [1/2] Building C object CMakeFiles/cmTC_6d4f1.dir/HAVE_FCNTL_H.c.obj
+[2/2] Linking C executable cmTC_6d4f1
+arm-none-eabi-gcc.exe: warning: CMakeFiles/cmTC_6d4f1.dir/HAVE_FCNTL_H.c.obj: linker input file unused because linking not done
+
+
+
