@@ -1,0 +1,28 @@
+# Available runners configured by board.cmake.
+runners:
+- nrfjprog
+- jlink
+
+# Default flash runner if --runner is not given.
+flash-runner: nrfjprog
+
+# Default debug runner if --runner is not given.
+debug-runner: jlink
+
+# Default command line arguments. The ones in "common" are always given.
+# The other sub-keys give runner-specific arguments.
+args:
+  common:
+  - --board-dir=C:/Users/cafo/ncs/my_ncs/ncs/zephyr/boards/arm/nrf5340pdk_nrf5340
+  - --elf-file=C:/Users/cafo/ncs/my_ncs/ncs/nrf/samples/bluetooth/central_uart/build_nrf5340pdk_nrf5340_cpuapp/zephyr/zephyr.elf
+  - --hex-file=C:/Users/cafo/ncs/my_ncs/ncs/nrf/samples/bluetooth/central_uart/build_nrf5340pdk_nrf5340_cpuapp/zephyr/merged.hex
+  - --bin-file=C:/Users/cafo/ncs/my_ncs/ncs/nrf/samples/bluetooth/central_uart/build_nrf5340pdk_nrf5340_cpuapp/zephyr/zephyr.bin
+  - --gdb=C:/Users/cafo/ncs/v1.3.0/toolchain/opt/bin/arm-none-eabi-gdb.exe
+  - --openocd=OPENOCD-NOTFOUND
+  nrfjprog:
+    - --nrf-family=NRF53
+    - --tool-opt=--coprocessor CP_APPLICATION
+  jlink:
+    - --dt-flash=y
+    - --device=cortex-m33
+    - --speed=4000

@@ -25,7 +25,7 @@ rule CUSTOM_COMMAND
 rule C_COMPILER__app_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -33,7 +33,7 @@ rule C_COMPILER__app_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__app_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -44,7 +44,7 @@ rule C_STATIC_LIBRARY_LINKER__app_
 rule C_COMPILER__zephyr_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -52,7 +52,7 @@ rule C_COMPILER__zephyr_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__zephyr_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -63,7 +63,7 @@ rule C_STATIC_LIBRARY_LINKER__zephyr_
 rule C_COMPILER__offsets_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -73,7 +73,7 @@ rule C_COMPILER__offsets_
 rule C_COMPILER__zephyr_prebuilt_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -81,7 +81,7 @@ rule C_COMPILER__zephyr_prebuilt_
 # Rule for linking C executable.
 
 rule C_EXECUTABLE_LINKER__zephyr_prebuilt_
-  command = cmd.exe /C "$PRE_LINK && C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
 
@@ -92,7 +92,7 @@ rule C_EXECUTABLE_LINKER__zephyr_prebuilt_
 rule C_COMPILER__zephyr_final_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -100,7 +100,7 @@ rule C_COMPILER__zephyr_final_
 # Rule for linking C executable.
 
 rule C_EXECUTABLE_LINKER__zephyr_final_
-  command = cmd.exe /C "$PRE_LINK && C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
 
@@ -111,7 +111,7 @@ rule C_EXECUTABLE_LINKER__zephyr_final_
 rule C_COMPILER__arch__common_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -119,7 +119,7 @@ rule C_COMPILER__arch__common_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__arch__common_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -130,7 +130,7 @@ rule C_STATIC_LIBRARY_LINKER__arch__common_
 rule C_COMPILER__isr_tables_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -138,7 +138,7 @@ rule C_COMPILER__isr_tables_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__isr_tables_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -149,7 +149,7 @@ rule C_STATIC_LIBRARY_LINKER__isr_tables_
 rule ASM_COMPILER__arch__arm__core__aarch32_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building ASM object $out
 
 
@@ -159,7 +159,7 @@ rule ASM_COMPILER__arch__arm__core__aarch32_
 rule C_COMPILER__arch__arm__core__aarch32_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -167,7 +167,7 @@ rule C_COMPILER__arch__arm__core__aarch32_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -178,7 +178,7 @@ rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32_
 rule ASM_COMPILER__arch__arm__core__aarch32__cortex_m_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building ASM object $out
 
 
@@ -188,7 +188,7 @@ rule ASM_COMPILER__arch__arm__core__aarch32__cortex_m_
 rule C_COMPILER__arch__arm__core__aarch32__cortex_m_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -196,7 +196,7 @@ rule C_COMPILER__arch__arm__core__aarch32__cortex_m_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -207,7 +207,7 @@ rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m_
 rule C_COMPILER__arch__arm__core__aarch32__cortex_m__mpu_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -215,7 +215,7 @@ rule C_COMPILER__arch__arm__core__aarch32__cortex_m__mpu_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m__mpu_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -226,7 +226,7 @@ rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m__mpu_
 rule C_COMPILER__arch__arm__core__aarch32__cortex_m__cmse_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -234,7 +234,7 @@ rule C_COMPILER__arch__arm__core__aarch32__cortex_m__cmse_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m__cmse_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -245,7 +245,7 @@ rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m__cmse_
 rule C_COMPILER__arch__arm__core__aarch32__cortex_m__tz_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -253,7 +253,7 @@ rule C_COMPILER__arch__arm__core__aarch32__cortex_m__tz_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m__tz_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -264,7 +264,7 @@ rule C_STATIC_LIBRARY_LINKER__arch__arm__core__aarch32__cortex_m__tz_
 rule C_COMPILER__lib__libc__minimal_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -272,7 +272,7 @@ rule C_COMPILER__lib__libc__minimal_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__lib__libc__minimal_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -283,7 +283,7 @@ rule C_STATIC_LIBRARY_LINKER__lib__libc__minimal_
 rule C_COMPILER__lib__posix_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -291,7 +291,7 @@ rule C_COMPILER__lib__posix_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__lib__posix_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -302,7 +302,7 @@ rule C_STATIC_LIBRARY_LINKER__lib__posix_
 rule C_COMPILER__soc__arm__common__cortex_m_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -310,7 +310,7 @@ rule C_COMPILER__soc__arm__common__cortex_m_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__soc__arm__common__cortex_m_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -321,7 +321,7 @@ rule C_STATIC_LIBRARY_LINKER__soc__arm__common__cortex_m_
 rule C_COMPILER__drivers__serial_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -329,7 +329,7 @@ rule C_COMPILER__drivers__serial_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__drivers__serial_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -340,7 +340,7 @@ rule C_STATIC_LIBRARY_LINKER__drivers__serial_
 rule C_COMPILER__.2e.2e__nrf__lib__fatal_error_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -348,7 +348,7 @@ rule C_COMPILER__.2e.2e__nrf__lib__fatal_error_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__lib__fatal_error_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -359,7 +359,7 @@ rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__lib__fatal_error_
 rule C_COMPILER__.2e.2e__nrf__subsys__fw_info_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -367,7 +367,7 @@ rule C_COMPILER__.2e.2e__nrf__subsys__fw_info_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__subsys__fw_info_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -378,7 +378,7 @@ rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__subsys__fw_info_
 rule C_COMPILER__.2e.2e__nrf__drivers__hw_cc310_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -386,7 +386,7 @@ rule C_COMPILER__.2e.2e__nrf__drivers__hw_cc310_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__drivers__hw_cc310_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -397,7 +397,7 @@ rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__drivers__hw_cc310_
 rule C_COMPILER__mbedtls_base_vanilla_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -405,7 +405,7 @@ rule C_COMPILER__mbedtls_base_vanilla_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__mbedtls_base_vanilla_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -416,7 +416,7 @@ rule C_STATIC_LIBRARY_LINKER__mbedtls_base_vanilla_
 rule C_COMPILER__mbedtls_external_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -424,7 +424,7 @@ rule C_COMPILER__mbedtls_external_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__mbedtls_external_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -435,7 +435,7 @@ rule C_STATIC_LIBRARY_LINKER__mbedtls_external_
 rule C_COMPILER__mbedcrypto_shared_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -443,7 +443,7 @@ rule C_COMPILER__mbedcrypto_shared_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__mbedcrypto_shared_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -451,18 +451,18 @@ rule C_STATIC_LIBRARY_LINKER__mbedcrypto_shared_
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__mbedcrypto_cc310_noglue_
+rule C_COMPILER__mbedcrypto_cc3xx_noglue_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
 #############################################
 # Rule for linking C static library.
 
-rule C_STATIC_LIBRARY_LINKER__mbedcrypto_cc310_noglue_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+rule C_STATIC_LIBRARY_LINKER__mbedcrypto_cc3xx_noglue_
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -470,18 +470,18 @@ rule C_STATIC_LIBRARY_LINKER__mbedcrypto_cc310_noglue_
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__mbedcrypto_cc310_
+rule C_COMPILER__mbedcrypto_cc3xx_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
 #############################################
 # Rule for linking C static library.
 
-rule C_STATIC_LIBRARY_LINKER__mbedcrypto_cc310_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+rule C_STATIC_LIBRARY_LINKER__mbedcrypto_cc3xx_
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -492,7 +492,7 @@ rule C_STATIC_LIBRARY_LINKER__mbedcrypto_cc310_
 rule C_COMPILER__.2e.2e__modules__hal__nordic_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -500,7 +500,7 @@ rule C_COMPILER__.2e.2e__modules__hal__nordic_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__.2e.2e__modules__hal__nordic_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -511,7 +511,7 @@ rule C_STATIC_LIBRARY_LINKER__.2e.2e__modules__hal__nordic_
 rule C_COMPILER__kernel_
   depfile = $DEP_FILE
   deps = gcc
-  command = C:\gnuarmemb\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -519,7 +519,7 @@ rule C_COMPILER__kernel_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__kernel_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\gnuarmemb\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\gnuarmemb\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -528,7 +528,7 @@ rule C_STATIC_LIBRARY_LINKER__kernel_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\cafo\ncs\my_ncs\ncs\nrf\samples\spm -BC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\spm
+  command = "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\cafo\ncs\my_ncs\ncs\nrf\samples\spm -BC:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\cellular\mqtt_work\build\spm
   description = Re-running CMake...
   generator = 1
 
@@ -537,7 +537,7 @@ rule RERUN_CMAKE
 # Rule for cleaning all built files.
 
 rule CLEAN
-  command = C:\ProgramData\chocolatey\bin\ninja.exe $FILE_ARG -t clean $TARGETS
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\ninja.exe $FILE_ARG -t clean $TARGETS
   description = Cleaning all built files...
 
 
@@ -545,6 +545,6 @@ rule CLEAN
 # Rule for printing all primary targets available.
 
 rule HELP
-  command = C:\ProgramData\chocolatey\bin\ninja.exe -t targets
+  command = C:\Users\cafo\ncs\v1.4.0\toolchain\opt\bin\ninja.exe -t targets
   description = All primary targets available:
 

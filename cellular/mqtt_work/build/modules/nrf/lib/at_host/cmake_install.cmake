@@ -34,6 +34,6 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/gnuarmemb/bin/arm-none-eabi-objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Users/cafo/ncs/v1.4.0/toolchain/opt/bin/arm-none-eabi-objdump.exe")
 endif()
 

@@ -33,7 +33,7 @@
 
 
 /* The Size of the AES context.*/
-#define MBEDTLS_AES_CONTEXT_SIZE_IN_WORDS           (24)
+#define MBEDTLS_AES_CONTEXT_SIZE_IN_WORDS           (29)
 
 
 #ifdef __cplusplus

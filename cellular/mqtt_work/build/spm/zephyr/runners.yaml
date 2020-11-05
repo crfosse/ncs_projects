@@ -17,7 +17,7 @@ config:
   hex_file: zephyr.hex
   bin_file: zephyr.bin
   # Host tools:
-  gdb: C:/gnuarmemb/bin/arm-none-eabi-gdb.exe
+  gdb: C:/Users/cafo/ncs/v1.4.0/toolchain/opt/bin/arm-none-eabi-gdb.exe
 
 # Runner specific arguments
 args:

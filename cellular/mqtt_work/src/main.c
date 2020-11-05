@@ -15,9 +15,12 @@
 #include <date_time.h>
 #include <stdio.h>
 #include <cJSON.h>
+#include <modem/modem_info.h>
 
 #include <dk_buttons_and_leds.h>
 
+#define LOG_MODULE_NAME mqtt_demo
+LOG_MODULE_REGISTER(LOG_MODULE_NAME, CONFIG_MQTT_DEMO_LOG_LEVEL);
 
 /* Buffers for MQTT client. */
 static uint8_t rx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
@@ -37,7 +40,9 @@ static struct pollfd fds;
 
 /* Test settings */
 #define SAMPLE_INTERVAL      1  //Seconds - in this application the sample interval only describes how long main sleeps between wakeups when not connected
-#define TRANSMISSION_INTERVAL 5 //Minutes - how often the timer fires to transmit samples
+#define TRANSMISSION_INTERVAL 2 //Minutes - how often the timer fires to transmit samples
+#define APP_CONNECT_TIMEOUT K_SECONDS(10)
+
 
 /* Work queue and items */
 #define APP_STACK_SIZE 4096
@@ -61,7 +66,7 @@ enum app_msg_type {
 };
 
 /* forward declarations */
-void app_connect(void);
+int app_connect(void);
 void app_disconnect(void);
 void create_message(char* destination, enum app_msg_type type, uint8_t* data, size_t len, int64_t * timestamp);
 
@@ -81,7 +86,7 @@ uint8_t * testData = "yK3vQHgUQ";
 /**@brief Recoverable BSD library error. */
 void bsd_recoverable_error_handler(uint32_t err)
 {
-	printk("bsdlib recoverable error: %u\n", (unsigned int)err);
+	LOG_ERR("bsdlib recoverable error: %u", (unsigned int)err);
 }
 
 #endif /* defined(CONFIG_BSD_LIBRARY) */
@@ -94,7 +99,7 @@ static void data_print(uint8_t *prefix, uint8_t *data, size_t len)
 
 	memcpy(buf, data, len);
 	buf[len] = 0;
-	printk("%s%s\n", prefix, buf);
+	LOG_INF("%s%s", log_strdup(prefix), log_strdup(buf));
 }
 
 /**@brief Function to publish data on the configured topic
@@ -109,13 +114,13 @@ static int data_publish(struct mqtt_client *c, enum mqtt_qos qos,
 	param.message.topic.topic.size = strlen(CONFIG_MQTT_PUB_TOPIC);
 	param.message.payload.data = data;
 	param.message.payload.len = len;
-	param.message_id = sys_rand32_get();
+	param.message_id = k_cycle_get_32();
 	param.dup_flag = 0;
 	param.retain_flag = 0;
 
-	data_print("Publishing: ", data, len);
-	printk("to topic: %s len: %u\n",
-		CONFIG_MQTT_PUB_TOPIC,
+	//LOG_INF("Publishing: %s", log_strdup(data));
+	LOG_DBG("to topic: %s len: %u",
+		log_strdup(CONFIG_MQTT_PUB_TOPIC),
 		(unsigned int)strlen(CONFIG_MQTT_PUB_TOPIC));
 
 	return mqtt_publish(c, &param);
@@ -168,7 +173,7 @@ static int publish_get_payload(struct mqtt_client *c, size_t length)
 				return ret;
 			}
 
-			printk("mqtt_read_publish_payload: EAGAIN\n");
+			LOG_ERR("mqtt_read_publish_payload: EAGAIN");
 
 			err = poll(&fds, 1,
 				   CONFIG_MQTT_KEEPALIVE * MSEC_PER_SEC);
@@ -199,17 +204,17 @@ void mqtt_evt_handler(struct mqtt_client *const c,
 	switch (evt->type) {
 	case MQTT_EVT_CONNACK:
 		if (evt->result != 0) {
-			printk("MQTT connect failed %d\n", evt->result);
+			LOG_ERR("MQTT connect failed %d", evt->result);
 			break;
 		}
 
 		k_sem_give(&mqtt_connect_ok);
-		printk("[%s:%d] MQTT client connected!\n", __func__, __LINE__);
+		LOG_INF("[%s:%d] MQTT client connected!", log_strdup(__func__), __LINE__);
 		//subscribe();
 		break;
 
 	case MQTT_EVT_DISCONNECT:
-		printk("[%s:%d] MQTT client disconnected %d\n", __func__,
+		LOG_INF("[%s:%d] MQTT client disconnected %d", log_strdup(__func__),
 		       __LINE__, evt->result);
 
 		break;
@@ -217,47 +222,47 @@ void mqtt_evt_handler(struct mqtt_client *const c,
 	case MQTT_EVT_PUBLISH: {
 		const struct mqtt_publish_param *p = &evt->param.publish;
 
-		printk("[%s:%d] MQTT PUBLISH result=%d len=%d\n", __func__,
+		LOG_INF("[%s:%d] MQTT PUBLISH result=%d len=%d", log_strdup(__func__),
 		       __LINE__, evt->result, p->message.payload.len);
 		err = publish_get_payload(c, p->message.payload.len);
 		if (err >= 0) {
 			data_print("Received: ", payload_buf,
 				p->message.payload.len);
 		} else {
-			printk("mqtt_read_publish_payload: Failed! %d\n", err);
-			printk("Disconnecting MQTT client...\n");
+			LOG_ERR("mqtt_read_publish_payload: Failed! %d", err);
+			LOG_INF("Disconnecting MQTT client...");
 
 			err = mqtt_disconnect(c);
 			if (err) {
-				printk("Could not app_disconnect: %d\n", err);
+				LOG_ERR("Could not app_disconnect: %d", err);
 			}
 		}
 	} break;
 
 	case MQTT_EVT_PUBACK:
 		if (evt->result != 0) {
-			printk("MQTT PUBACK error %d\n", evt->result);
+			LOG_ERR("MQTT PUBACK error %d", evt->result);
 			break;
 		}
 
 		k_sem_give(&mqtt_puback_ok);
 
-		printk("[%s:%d] PUBACK packet id: %u\n", __func__, __LINE__,
+		LOG_INF("[%s:%d] PUBACK packet id: %u", log_strdup(__func__), __LINE__,
 				evt->param.puback.message_id);
 		break;
 
 	case MQTT_EVT_SUBACK:
 		if (evt->result != 0) {
-			printk("MQTT SUBACK error %d\n", evt->result);
+			LOG_ERR("MQTT SUBACK error %d", evt->result);
 			break;
 		}
 
-		printk("[%s:%d] SUBACK packet id: %u\n", __func__, __LINE__,
+		LOG_INF("[%s:%d] SUBACK packet id: %u", log_strdup(__func__), __LINE__,
 				evt->param.suback.message_id);
 		break;
 
 	default:
-		printk("[%s:%d] default: %d\n", __func__, __LINE__,
+		LOG_INF("[%s:%d] default: %d", log_strdup(__func__), __LINE__,
 				evt->type);
 		break;
 	}
@@ -278,7 +283,7 @@ static void broker_init(void)
 
 	err = getaddrinfo(CONFIG_MQTT_BROKER_HOSTNAME, NULL, &hints, &result);
 	if (err) {
-		printk("ERROR: getaddrinfo failed %d\n", err);
+		LOG_ERR("ERROR: getaddrinfo failed %d", err);
 
 		return;
 	}
@@ -302,11 +307,11 @@ static void broker_init(void)
 
 			inet_ntop(AF_INET, &broker4->sin_addr.s_addr,
 				  ipv4_addr, sizeof(ipv4_addr));
-			printk("IPv4 Address found %s\n", ipv4_addr);
+			LOG_INF("IPv4 Address found %s", log_strdup(ipv4_addr));
 
 			break;
 		} else {
-			printk("ai_addrlen = %u should be %u or %u\n",
+			LOG_WRN("ai_addrlen = %u should be %u or %u",
 				(unsigned int)addr->ai_addrlen,
 				(unsigned int)sizeof(struct sockaddr_in),
 				(unsigned int)sizeof(struct sockaddr_in6));
@@ -384,10 +389,10 @@ static void modem_configure(void)
 	} else {
 		int err;
 
-		printk("LTE Link Connecting ...\n");
+		LOG_INF("LTE Link Connecting ...");
 		err = lte_lc_init_and_connect();
 		__ASSERT(err == 0, "LTE link could not be established.");
-		printk("LTE Link Connected!\n");
+		LOG_INF("LTE Link Connected!");
 	}
 #endif /* defined(CONFIG_LTE_LINK_CONTROL) */
 }
@@ -401,7 +406,7 @@ static void modem_configure(void)
 static void button_handler(uint32_t button_states, uint32_t has_changed)
 {
 	if (has_changed & button_states & DK_BTN1_MSK) {
-		printk("DEV_DBG: button 1 pressed\n");
+		LOG_DBG("DEV_DBG: button 1 pressed");
 		k_work_submit_to_queue(&app_work_q, &alarm_work);
 	}
 	else if (has_changed & button_states & DK_BTN2_MSK) {
@@ -418,21 +423,21 @@ static void buttons_leds_init(void)
 {
 	int err;
 
-	printk("DEV_DBG: Initalizing buttons and leds.\n");
+	LOG_DBG("Initalizing buttons and leds.");
 
 	err = dk_buttons_init(button_handler);
 	if (err) {
-		printk("Could not initialize buttons, err code: %d\n", err);
+		LOG_ERR("Could not initialize buttons, err code: %d", err);
 	}
 
 	err = dk_leds_init();
 	if (err) {
-		printk("Could not initialize leds, err code: %d\n", err);
+		LOG_ERR("Could not initialize leds, err code: %d", err);
 	}
 
 	err = dk_set_leds_state(DK_ALL_LEDS_MSK, DK_NO_LEDS_MSK);
 	if (err) {
-		printk("Could not set leds state, err code: %d\n", err);
+		LOG_ERR("Could not set leds state, err code: %d", err);
 	}
 }
 
@@ -459,9 +464,16 @@ void timer_init(void)
 }
 
 void publish_samples(struct k_work *item) {
-	app_connect();
-
-	printk("DEV: Publish Samples\n");
+	int err;
+	err = app_connect();
+	if(err) {
+		LOG_ERR("PUBLISH_SAMPLES: connect failed with error %d", err);
+		//TODO: Handle error here
+		app_disconnect();
+		return;
+	}
+	LOG_DBG("Publish Samples");
+	
 	//Lighting LED2 to indicate that transmission is initiated
 	dk_set_led(DK_LED2, 0);
 	
@@ -475,7 +487,7 @@ void publish_samples(struct k_work *item) {
 
 	//Publish message
 	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message, sizeof(message));
-		
+
 	//Wait for publish acknowledgement
 	k_sem_take(&mqtt_puback_ok, K_FOREVER);
 	
@@ -485,9 +497,18 @@ void publish_samples(struct k_work *item) {
 	app_disconnect();
 }
 
-void publish_alarm(struct k_work *item) {
-	app_connect();
-	printk("DEV: Publish alarm\n");
+void publish_alarm(struct k_work *item) {	
+	int err;
+
+	err = app_connect();
+	if(err) {
+		LOG_ERR("PUBLISH_ALARM: connect failed with error %d", err);
+		//retry_publish = true;
+		//TODO: Handle error here.
+		app_disconnect();
+		return;
+	}
+	LOG_DBG("Publish alarm");
 
 	//Lighting LED2 to indicate that transmission is initiated
 	dk_set_led(DK_LED2, 0);
@@ -505,7 +526,7 @@ void publish_alarm(struct k_work *item) {
 
 	//Publish message
 	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message, sizeof(message));
-	
+
 	//Wait for publish acknowledgement
 	k_sem_take(&mqtt_puback_ok, K_FOREVER);
 	
@@ -514,52 +535,71 @@ void publish_alarm(struct k_work *item) {
 	app_disconnect();
 }
 
-void app_connect(void) {
-	printk("Connecting\n");
+int app_connect(void) {
+	LOG_INF("Connecting");
 	int err;
 
 	err = lte_lc_connect();
 	if(err) {
-		printk("LTE: Connection failed\n");
+		LOG_ERR("LTE: Connection failed");
 	}
 
-	printk("LTE: Link connected\n");
+	LOG_INF("LTE: Link connected");
 
 	err = mqtt_connect(&client);
 	if (err != 0) {
-		printk("ERROR: mqtt_connect %d\n", err);
-		return;
+		LOG_ERR("mqtt_connect %d", err);
+		return err;
 	}
 
 	err = fds_init(&client);
 	if (err != 0) {
-		printk("ERROR: fds_init %d\n", err);
-		return;
+		LOG_ERR("fds_init %d", err);
+		return err;
 	}
+
 	app_connected = true;
 
 	/* Wait for connection to finish */
-	k_sem_take(&mqtt_connect_ok, K_FOREVER);
+	err = k_sem_take(&mqtt_connect_ok, APP_CONNECT_TIMEOUT);
+	if(err) {
+		LOG_ERR("MQTT connection timed out\n");
+		app_connected = false;
+		return -ENOTCONN;
+	}
+
+	char rsrp_res[128];
+
+	modem_info_string_get(MODEM_INFO_RSRP, rsrp_res, sizeof(rsrp_res));
+
+	LOG_INF("RSRP: %s", log_strdup(rsrp_res));
+
+	return 0;
 }
 
 void app_disconnect(void) {
-	printk("Disconnecting\n");
+	LOG_INF("Disconnecting");
 	int err;
 
-	app_connected = 0;
-
-	err = mqtt_disconnect(&client);
-	if (err != 0) {
-		printk("ERROR: mqtt_connect %d\n", err);
-		return;
+	if(!app_connected) {
+		//Never connected in the first place. Means that we need an abort.
+		LOG_INF("Aborting mqtt connection");
+		mqtt_abort(&client);
+	} else {
+		app_connected = 0;
+		err = mqtt_disconnect(&client);
+		if (err != 0) {
+			LOG_ERR("mqtt_disconnect %d", err);
+			return;
+		}
 	}
-	printk("MQTT: disconnected\n");
+	LOG_INF("MQTT: disconnected");
 
 	err = lte_lc_offline();
 	if(err) {
-		printk("LTE: Offline mode failed\n");
+		LOG_ERR("LTE: Offline mode failed\n");
 	}
-	printk("LTE: offline\n");
+	LOG_INF("LTE: offline");
 }
 
 void init_work(void) {
@@ -574,19 +614,19 @@ void date_time_handler(const struct date_time_evt *evt) {
 	switch (evt->type)
 	{
 	case DATE_TIME_OBTAINED_MODEM:
-		printk("DATE_TIME: got time from modem.\n");
+		LOG_DBG("DATE_TIME: got time from modem.\n");
 		k_sem_give(&date_time_ok);
 		break;
 	case DATE_TIME_OBTAINED_NTP:
-		printk("DATE_TIME: got time from NTP.\n");
+		LOG_DBG("DATE_TIME: got time from NTP.\n");
 		k_sem_give(&date_time_ok);
 		break;
 	case DATE_TIME_OBTAINED_EXT:
-		printk("DATE_TIME: got time from external.\n");
+		LOG_DBG("DATE_TIME: got time from external.\n");
 		k_sem_give(&date_time_ok);
 		break;
 	case DATE_TIME_NOT_OBTAINED:
-		printk("DATE_TIME: failed to get time.\n");
+		LOG_DBG("DATE_TIME: failed to get time.\n");
 		k_sem_give(&date_time_ok);
 		break;
 	default:
@@ -626,7 +666,7 @@ void main(void)
 {
 	int err;
 
-    printk("MQTT sensor application example started\n");
+    LOG_INF("MQTT sensor application example started");
 
 	modem_configure();
 	date_time_update_async(date_time_handler);
@@ -637,10 +677,11 @@ void main(void)
 	buttons_leds_init(); /* Button for "alarm simulation" and leds for control */
 	timer_init(); /* Periodic sample timer */
 	init_work();  /* Work queue and items for sampling and alarm */
+	modem_info_init();
 	
 	err = lte_lc_offline();
 	if(err) {
-		printk("LTE: Offline mode failed\n");
+		LOG_ERR("LTE: Offline mode failed");
 	}
 
 
@@ -659,25 +700,25 @@ void main(void)
 			if(app_connected) { 
 				err = mqtt_live(&client);
 				if ((err != 0) && (err != -EAGAIN)) {
-					printk("ERROR: mqtt_live %d\n", err);
+					LOG_ERR("ERROR: mqtt_live %d", err);
 					break;
 				}
 
 				if ((fds.revents & POLLIN) == POLLIN) {
 					err = mqtt_input(&client);
 					if (err != 0) {
-						printk("ERROR: mqtt_input %d\n", err);
+						LOG_ERR("ERROR: mqtt_input %d", err);
 						continue;
 					}
 				}
 
 				if ((fds.revents & POLLERR) == POLLERR) {
-					printk("POLLERR\n");
+					LOG_ERR("POLLERR");
 					break;
 				}
 
 				if ((fds.revents & POLLNVAL) == POLLNVAL) {
-					printk("POLLNVAL\n");
+					LOG_ERR("POLLNVAL");
 					continue;
 				}
 			}
@@ -687,10 +728,10 @@ void main(void)
 		}
 	}
 
-	printk("Disconnecting MQTT client...\n");
+	LOG_INF("Disconnecting MQTT client...");
 
 	err = mqtt_disconnect(&client);
 	if (err) {
-		printk("Could not disconnect MQTT client. Error: %d\n", err);
+		LOG_ERR("Could not disconnect MQTT client. Error: %d", err);
 	}
 }

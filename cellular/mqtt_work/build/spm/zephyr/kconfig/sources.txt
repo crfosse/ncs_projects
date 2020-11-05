@@ -1,8 +1,8 @@
 C:\Users\cafo\ncs\my_ncs\ncs\bootloader\mcuboot\zephyr\Kconfig
-C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\spm\Kconfig\Kconfig.modules
-C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\spm\Kconfig\Kconfig.soc
-C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\spm\Kconfig\Kconfig.soc.arch
-C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\mqtt_work\build\spm\Kconfig\Kconfig.soc.defconfig
+C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\cellular\mqtt_work\build\spm\Kconfig\Kconfig.modules
+C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\cellular\mqtt_work\build\spm\Kconfig\Kconfig.soc
+C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\cellular\mqtt_work\build\spm\Kconfig\Kconfig.soc.arch
+C:\Users\cafo\ncs\my_ncs\ncs\ncs_projects\cellular\mqtt_work\build\spm\Kconfig\Kconfig.soc.defconfig
 C:\Users\cafo\ncs\my_ncs\ncs\nrf\Kconfig.nrf
 C:\Users\cafo\ncs\my_ncs\ncs\nrf\drivers\Kconfig
 C:\Users\cafo\ncs\my_ncs\ncs\nrf\drivers\bt_ll_softdevice\Kconfig

@@ -3,7 +3,11 @@
 Bluetooth: Central UART
 #######################
 
-The Central UART sample demonstrates how to use the :ref:`nus_c_readme`.
+.. contents::
+   :local:
+   :depth: 2
+
+The Central UART sample demonstrates how to use the :ref:`nus_client_readme`.
 It uses the NUS Client to send data back and forth between a UART connection and a Bluetooth LE connection, emulating a serial port over Bluetooth LE.
 
 
@@ -14,6 +18,17 @@ When connected, the sample forwards any data received on the RX pin of the UART 
 On Nordic Semiconductor's development kits, the UART 1 peripheral is typically gated through the SEGGER chip to a USB CDC virtual serial port.
 
 Any data sent from the Bluetooth LE unit is sent out of the UART 1 peripheral's TX pin.
+
+
+.. _central_uart_debug:
+
+Debugging
+*********
+
+In this sample, a UART console is used to send and read data over the NUS Client.
+Debug messages are not displayed in the UART console, but are printed by the RTT logger instead.
+
+If you want to view the debug messages, follow the procedure in :ref:`testing_rtt_connect`.
 
 Requirements
 ************
@@ -42,6 +57,7 @@ After programming the sample to your board, test it by performing the following 
 
 1. Connect the board to the computer using a USB cable. The board is assigned a COM port (Windows) or ttyACM device (Linux), which is visible in the Device Manager.
 #. |connect_terminal_specific|
+#. Optionally, connect the RTT console to display debug messages. See :ref:`central_uart_debug`.
 #. Reset the board.
 #. Observe that the text "Starting NUS Client example" is printed on the COM listener running on the computer and the device starts scanning for Peripheral boards with NUS.
 #. Program the :ref:`peripheral_uart` sample to the second board.
@@ -59,7 +75,7 @@ Dependencies
 
 This sample uses the following |NCS| libraries:
 
-* :ref:`nus_c_readme`
+* :ref:`nus_client_readme`
 * :ref:`gatt_dm_readme`
 * :ref:`nrf_bt_scan_readme`
 

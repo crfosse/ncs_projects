@@ -1,13 +1,13 @@
 # Target labels
  spm_subimage
 # Source files and their labels
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/CMakeFiles/spm_subimage
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/CMakeFiles/spm_subimage.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/CMakeFiles/spm_subimage-complete.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-install.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-mkdir.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-download.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-update.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-patch.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-configure.rule
-C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-build.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/CMakeFiles/spm_subimage
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/CMakeFiles/spm_subimage.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/CMakeFiles/spm_subimage-complete.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-install.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-mkdir.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-download.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-update.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-patch.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-configure.rule
+C:/Users/cafo/ncs/my_ncs/ncs/ncs_projects/cellular/mqtt_work/build/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-build.rule

@@ -38,3 +38,7 @@ endmenu
 menu "Zephyr Kernel"
 source "$ZEPHYR_BASE/Kconfig.zephyr"
 endmenu
+
+module = MQTT_DEMO
+module-str = MQTT Demo
+source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"

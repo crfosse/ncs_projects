@@ -8,8 +8,9 @@ cc_pal_memmap.c.obj
 cc_pal_mutex.c.obj
 cc_pal_pm.c.obj
 cc_hal.c.obj
-ecp_alt_cc310.c.obj
+ecp_alt_cc3xx.c.obj
 ecp_curves_alt.c.obj
+cc3xx_kmu.c.obj
 cc_pal_trng.c.obj
 cc_common_conv_endian.c.obj
 cc_common_math.c.obj
@@ -24,6 +25,7 @@ aes_driver.c.obj
 aesccm_driver.c.obj
 chacha_driver.c.obj
 srp_driver.c.obj
+kmu_shared.c.obj
 cc_rsa_oaep.c.obj
 cc_rsa_schemes.c.obj
 cc_rsa_pkcs_ver15_util.c.obj

@@ -1,0 +1,84 @@
+<!DOCTYPE CrossStudio_Session_File>
+<session>
+ <Bookmarks/>
+ <Breakpoints groups="Breakpoints" active_group="Breakpoints">
+  <BreakpointListItem trigger="" line="512" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../src/main.c" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="147" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../../../../../../../v1.3.0/zephyr/drivers/bluetooth/hci/rpmsg_nrf53.c" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="262" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../../../../../../../v1.3.0/zephyr/drivers/bluetooth/hci/rpmsg_nrf53.c" useHWbreakpoint="false"/>
+  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault;SecureFault"/>
+ </Breakpoints>
+ <ExecutionProfileWindow/>
+ <FrameBufferWindow>
+  <FrameBufferWindow bufferHeight="-1" addressSpace="" addressText="" bufferWidth="-1"/>
+ </FrameBufferWindow>
+ <Memory1>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory1>
+ <Memory2>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory2>
+ <Memory3>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory3>
+ <Memory4>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory4>
+ <Project>
+  <ProjectSessionItem path="central_uart"/>
+  <ProjectSessionItem path="central_uart;zephyr/merged.hex"/>
+  <ProjectSessionItem path="central_uart;build"/>
+  <ProjectSessionItem path="central_uart;build;app/libapp.a"/>
+  <ProjectSessionItem path="central_uart;build;app/libapp.a;C_COMPILER__app"/>
+  <ProjectSessionItem path="central_uart;build;modules/libmetal/libmetal/lib/libmetal.a"/>
+  <ProjectSessionItem path="central_uart;build;modules/libmetal/libmetal/lib/libmetal.a;C_COMPILER__metal"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/arch/arch/arm/core/aarch32/cortex_m/libarch__arm__core__aarch32__cortex_m.a"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/arch/arch/arm/core/aarch32/cortex_m/libarch__arm__core__aarch32__cortex_m.a;ASM_COMPILER__arch__arm__core__aarch32__cortex_m"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a;C_COMPILER__arch__arm__core__aarch32"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/kernel/libkernel.a"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/kernel/libkernel.a;C_COMPILER__kernel"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/lib/libc/minimal/liblib__libc__minimal.a"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/lib/libc/minimal/liblib__libc__minimal.a;C_COMPILER__lib__libc__minimal"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/libzephyr.a"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/libzephyr.a;C_COMPILER__zephyr"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/subsys/bluetooth/host/libsubsys__bluetooth__host.a"/>
+  <ProjectSessionItem path="central_uart;build;zephyr/subsys/bluetooth/host/libsubsys__bluetooth__host.a;C_COMPILER__subsys__bluetooth__host"/>
+ </Project>
+ <Register1>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/msp_ns;CPU/psp_ns;CPU/msp_s;CPU/psp_s;CPU/msplim_s;CPU/psplim_s;CPU/msplim_ns;CPU/psplim_ns;CPU/cfbp_s;CPU/cfbp_ns;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register1>
+ <Register2>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/msp_ns;CPU/psp_ns;CPU/msp_s;CPU/psp_s;CPU/msplim_s;CPU/psplim_s;CPU/msplim_ns;CPU/psplim_ns;CPU/cfbp_s;CPU/cfbp_ns;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register2>
+ <Register3>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/msp_ns;CPU/psp_ns;CPU/msp_s;CPU/psp_s;CPU/msplim_s;CPU/psplim_s;CPU/msplim_ns;CPU/psplim_ns;CPU/cfbp_s;CPU/cfbp_ns;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register3>
+ <Register4>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/msp;CPU/psp;CPU/cfbp;CPU/msp_ns;CPU/psp_ns;CPU/msp_s;CPU/psp_s;CPU/msplim_s;CPU/psplim_s;CPU/msplim_ns;CPU/psplim_ns;CPU/cfbp_s;CPU/cfbp_ns;CPU/internal" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register4>
+ <Threads>
+  <ThreadsWindow showLists=""/>
+ </Threads>
+ <TraceWindow>
+  <Trace enabled="Yes"/>
+ </TraceWindow>
+ <Watch1>
+  <Watches active="1" update="Never"/>
+ </Watch1>
+ <Watch2>
+  <Watches active="0" update="Never"/>
+ </Watch2>
+ <Watch3>
+  <Watches active="0" update="Never"/>
+ </Watch3>
+ <Watch4>
+  <Watches active="0" update="Never"/>
+ </Watch4>
+ <Files>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="66" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../../v1.3.0/zephyr/include/bluetooth/addr.h" selected="0" top="53" codecName=""/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="451" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../../v1.3.0/zephyr/kernel/init.c" selected="0" top="438" codecName=""/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="48" y="254" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../../v1.3.0/zephyr/drivers/bluetooth/hci/rpmsg_nrf53.c" selected="1" top="241" codecName=""/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="87" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../../v1.3.0/zephyr/arch/arm/core/aarch32/cortex_m/fault_s.S" selected="0" top="65" codecName=""/>
+ </Files>
+ <ARMCrossStudioWindow activeProject="zephyr/merged.hex" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3711"/>
+</session>

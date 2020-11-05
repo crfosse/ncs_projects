@@ -5,7 +5,7 @@
  *   nrf9160dk_nrf9160ns.dts.pre.tmp
  *
  * Directories with bindings:
- *   C:\Users\cafo\ncs\my_ncs\ncs\nrf/dts/bindings, $ZEPHYR_BASE\dts\bindings
+ *   C:/Users/cafo/ncs/my_ncs/ncs/nrf/dts/bindings, $ZEPHYR_BASE\dts\bindings
  *
  * Nodes in dependency order (ordinal and path):
  *   0   /

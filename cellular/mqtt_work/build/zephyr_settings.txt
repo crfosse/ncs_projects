@@ -1,2 +1,2 @@
-"BOARD_ROOT":"C:\Users\cafo\ncs\my_ncs\ncs\nrf"
-"DTS_ROOT":"C:\Users\cafo\ncs\my_ncs\ncs\nrf"
+"BOARD_ROOT":"C:/Users/cafo/ncs/my_ncs/ncs/nrf"
+"DTS_ROOT":"C:/Users/cafo/ncs/my_ncs/ncs/nrf"

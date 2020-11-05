@@ -369,7 +369,7 @@
 //#define MBEDTLS_DES_ALT
 /* #undef MBEDTLS_DHM_ALT */
 /* #undef MBEDTLS_ECJPAKE_ALT */
-//#define MBEDTLS_GCM_ALT
+/* #undef MBEDTLS_GCM_ALT */
 //#define MBEDTLS_NIST_KW_ALT
 //#define MBEDTLS_MD2_ALT
 //#define MBEDTLS_MD4_ALT
@@ -3394,7 +3394,7 @@ it is (2^48 - 1), our restriction is :  (int - 0xFFFF - 0xF).*/
 /* #undef MBEDTLS_ECP_FIXED_POINT_OPTIM */
 
 /* Entropy options */
-//#define MBEDTLS_ENTROPY_MAX_SOURCES                20 /**< Maximum number of sources supported */
+//#define MBEDTLS_ENTROPY_MAX_SOURCES                1 /**< Maximum number of sources supported */
 #define MBEDTLS_ENTROPY_MAX_GATHER                   144 /**< Maximum amount requested from entropy sources */
 //#define MBEDTLS_ENTROPY_MIN_HARDWARE               32 /**< Default minimum number of bytes required for the hardware entropy source mbedtls_hardware_poll() before entropy is released */
 
@@ -3759,4 +3759,3 @@ typedef void mbedtls_ecp_restart_ctx;
 #endif
 
 #endif /* MBEDTLS_CONFIG_H */
-
