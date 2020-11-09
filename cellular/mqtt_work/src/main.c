@@ -585,11 +585,9 @@ int app_connect(void) {
 		return -ENOTCONN;
 	}
 
-	//char rsrp_res[128];
-
-	//modem_info_string_get(MODEM_INFO_RSRP, rsrp_res, sizeof(rsrp_res));
-
-	//LOG_INF("RSRP: %s", log_strdup(rsrp_res));
+	char rsrp_res[128];
+	modem_info_string_get(MODEM_INFO_RSRP, rsrp_res, sizeof(rsrp_res));
+	LOG_INF("RSRP: %s", log_strdup(rsrp_res));
 
 	return 0;
 }

@@ -66,8 +66,15 @@ struct uart_data_t {
 	uint16_t len;
 };
 
+struct ble_data_t {
+	uint8_t data[UART_BUF_SIZE];
+	uint16_t len;
+}
+
 static K_FIFO_DEFINE(fifo_uart_tx_data);
 static K_FIFO_DEFINE(fifo_uart_rx_data);
+static K_FIFO_DEFINE(fifo_ble_tx_data);
+
 
 static const struct bt_data ad[] = {
 	BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
@@ -542,7 +549,11 @@ void ble_write_thread(void)
 	int msg_cnt = 0;	
 	int err;
 	for (;;) {
-		err = bt_nus_send(NULL, "0123456789", 10);
+		/* Wait indefinitely for data to be sent over bluetooth */
+		struct ble_data_t *buf = k_fifo_get(&fifo_ble_tx_data,
+						     K_FOREVER);
+
+		err = bt_nus_send(NULL, buf->data, buf->len);
 		if (err) {
 			LOG_WRN("Failed to send data over BLE connection" 
 				"(err %d)", err);
@@ -553,9 +564,23 @@ void ble_write_thread(void)
 			}
 		}
 
-		k_sleep(K_MSEC(1));
+		k_free(buf);
+	}
+}
+
+void sensor_simulator(void) {
+	k_sem_take(&ble_connected_sem, K_FOREVER);
+
+	for(;;) {
+
+		struct ble_data_t 
+		k_fifo_put(&fifo_ble_tx_data);
+
 	}
 }
 
 K_THREAD_DEFINE(ble_write_thread_id, STACKSIZE, ble_write_thread, NULL, NULL,
 		NULL, PRIORITY, 0, 0);
+
+K_THREAD_DEFINE(sensor_simulator_id, STACKSIZE, sensor_simulator, NULL, NULL,
+		NULL, PRIORITY, 0. 0);
