@@ -32,7 +32,9 @@ config MQTT_MESSAGE_BUFFER_SIZE
 config MQTT_PAYLOAD_BUFFER_SIZE
 	int "MQTT payload buffer size"
 	default 128
-
+config APP_CONNECT_RETRY_DELAY
+	int "Retry delay on failed connection (seconds)"
+	default 10
 endmenu
 
 menu "Zephyr Kernel"

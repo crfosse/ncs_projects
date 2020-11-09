@@ -40,7 +40,7 @@ static struct pollfd fds;
 
 /* Test settings */
 #define SAMPLE_INTERVAL      1  //Seconds - in this application the sample interval only describes how long main sleeps between wakeups when not connected
-#define TRANSMISSION_INTERVAL 2 //Minutes - how often the timer fires to transmit samples
+#define TRANSMISSION_INTERVAL 5 //Minutes - how often the timer fires to transmit samples
 #define APP_CONNECT_TIMEOUT K_SECONDS(10)
 
 
@@ -65,10 +65,15 @@ enum app_msg_type {
 	SENSOR_SAMPLE
 };
 
+struct app_message {
+	char data[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
+	size_t len;
+};
+
 /* forward declarations */
 int app_connect(void);
 void app_disconnect(void);
-void create_message(char* destination, enum app_msg_type type, uint8_t* data, size_t len, int64_t * timestamp);
+void create_message(struct app_message * destination, enum app_msg_type type, uint8_t* data, size_t len, int64_t * timestamp);
 
 /* Connection status (should be mutex protected?) */
 bool app_connected = false;
@@ -76,8 +81,8 @@ bool app_connected = false;
 // TEST_DATA_SIZE
 #define TEST_DATA_SIZE 100
 
-//255 random characters in an array for upload testing
-uint8_t * testData = "yK3vQHgUQ";
+//random characters in an array for upload testing
+uint8_t * testData = "yK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQ";
 
 /**** APPLICATION ADDITIONS - End ****/
 
@@ -107,6 +112,7 @@ static void data_print(uint8_t *prefix, uint8_t *data, size_t len)
 static int data_publish(struct mqtt_client *c, enum mqtt_qos qos,
 	uint8_t *data, size_t len)
 {
+	
 	struct mqtt_publish_param param;
 
 	param.message.topic.qos = qos;
@@ -118,7 +124,8 @@ static int data_publish(struct mqtt_client *c, enum mqtt_qos qos,
 	param.dup_flag = 0;
 	param.retain_flag = 0;
 
-	//LOG_INF("Publishing: %s", log_strdup(data));
+	//("Publishing: %s", data, len);
+	LOG_INF("Publishing: %s", log_strdup(data));
 	LOG_DBG("to topic: %s len: %u",
 		log_strdup(CONFIG_MQTT_PUB_TOPIC),
 		(unsigned int)strlen(CONFIG_MQTT_PUB_TOPIC));
@@ -379,7 +386,7 @@ static int fds_init(struct mqtt_client *c)
 /**@brief Configures modem to provide LTE link. Blocks until link is
  * successfully established.
  */
-static void modem_configure(void)
+static int modem_configure(void)
 {
 #if defined(CONFIG_LTE_LINK_CONTROL)
 	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
@@ -391,8 +398,13 @@ static void modem_configure(void)
 
 		LOG_INF("LTE Link Connecting ...");
 		err = lte_lc_init_and_connect();
-		__ASSERT(err == 0, "LTE link could not be established.");
+		if(err) {
+			LOG_ERR("LTE link could not be established.");
+			return -1;
+		}
 		LOG_INF("LTE Link Connected!");
+
+		return 0;
 	}
 #endif /* defined(CONFIG_LTE_LINK_CONTROL) */
 }
@@ -482,11 +494,11 @@ void publish_samples(struct k_work *item) {
 	date_time_now(&curr_time);
 
 	//Format JSON message
-	char message[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
-	create_message(message, SENSOR_SAMPLE, testData, TEST_DATA_SIZE, &curr_time);
+	struct app_message message;
+	create_message(&message, SENSOR_SAMPLE, testData, sizeof(testData), &curr_time);
 
 	//Publish message
-	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message, sizeof(message));
+	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message.data, message.len);
 
 	//Wait for publish acknowledgement
 	k_sem_take(&mqtt_puback_ok, K_FOREVER);
@@ -521,11 +533,13 @@ void publish_alarm(struct k_work *item) {
 	date_time_now(&curr_time);
 
 	//Create JSON formatted message
-	char message[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
-	create_message(message, SENSOR_ALARM, curr_sample, 1, &curr_time);
+	struct app_message message;
+	create_message(&message, SENSOR_ALARM, curr_sample, 1, &curr_time);
+
+	//LOG_INF("%s", log_strdup(message));
 
 	//Publish message
-	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message, sizeof(message));
+	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message.data, message.len);
 
 	//Wait for publish acknowledgement
 	k_sem_take(&mqtt_puback_ok, K_FOREVER);
@@ -539,9 +553,12 @@ int app_connect(void) {
 	LOG_INF("Connecting");
 	int err;
 
-	err = lte_lc_connect();
-	if(err) {
-		LOG_ERR("LTE: Connection failed");
+	while(lte_lc_connect() != 0) {
+		LOG_WRN("Failed to establish LTE connection.");
+		LOG_WRN("Will retry in %d seconds.",
+				CONFIG_APP_CONNECT_RETRY_DELAY);
+		//TODO: limit number of retries
+		k_sleep(K_SECONDS(CONFIG_APP_CONNECT_RETRY_DELAY));
 	}
 
 	LOG_INF("LTE: Link connected");
@@ -568,11 +585,11 @@ int app_connect(void) {
 		return -ENOTCONN;
 	}
 
-	char rsrp_res[128];
+	//char rsrp_res[128];
 
-	modem_info_string_get(MODEM_INFO_RSRP, rsrp_res, sizeof(rsrp_res));
+	//modem_info_string_get(MODEM_INFO_RSRP, rsrp_res, sizeof(rsrp_res));
 
-	LOG_INF("RSRP: %s", log_strdup(rsrp_res));
+	//LOG_INF("RSRP: %s", log_strdup(rsrp_res));
 
 	return 0;
 }
@@ -634,7 +651,7 @@ void date_time_handler(const struct date_time_evt *evt) {
 	}
 }
 
-void create_message(char* destination, enum app_msg_type type, uint8_t *data, size_t len, int64_t *timestamp) {
+void create_message(struct app_message* destination, enum app_msg_type type, uint8_t *data, size_t len, int64_t *timestamp) {
 
 	cJSON *message;
 
@@ -655,7 +672,9 @@ void create_message(char* destination, enum app_msg_type type, uint8_t *data, si
 	cJSON_AddStringToObject(message, "timestamp", time_str);
 	cJSON_AddStringToObject(message, "data", data);
 
-	strcpy(destination, cJSON_Print(message));
+	destination->len = strlen(cJSON_Print(message));
+
+	strcpy(destination->data, cJSON_Print(message));
 
 	cJSON_Delete(message);
 }
@@ -668,7 +687,14 @@ void main(void)
 
     LOG_INF("MQTT sensor application example started");
 
-	modem_configure();
+	while(modem_configure() != 0) {
+		LOG_WRN("Failed to establish LTE connection.");
+		LOG_WRN("Will retry in %d seconds.",
+				CONFIG_APP_CONNECT_RETRY_DELAY);
+		k_sleep(K_SECONDS(CONFIG_APP_CONNECT_RETRY_DELAY));
+	}
+	
+	
 	date_time_update_async(date_time_handler);
 	k_sem_take(&date_time_ok,K_FOREVER);
 
