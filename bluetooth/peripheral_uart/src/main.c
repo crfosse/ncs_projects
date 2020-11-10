@@ -51,8 +51,17 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #define UART_WAIT_FOR_BUF_DELAY K_MSEC(50)
 #define UART_WAIT_FOR_RX CONFIG_BT_NUS_UART_RX_WAIT_TIME
 
+
+//uint8_t * testData = "yK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQ"
+//					 "yK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK3vQHgUQyK";
+
+#define TEST_DATA_SIZE 10
+uint8_t * testData = "012345678";
+
+
 static K_SEM_DEFINE(ble_init_ok, 0, 1);
 static K_SEM_DEFINE(ble_connected_sem, 0, 1);
+static K_SEM_DEFINE(sensor_start_sem, 0, 1);
 
 static struct bt_conn *current_conn;
 static struct bt_conn *auth_conn;
@@ -69,7 +78,7 @@ struct uart_data_t {
 struct ble_data_t {
 	uint8_t data[UART_BUF_SIZE];
 	uint16_t len;
-}
+};
 
 static K_FIFO_DEFINE(fifo_uart_tx_data);
 static K_FIFO_DEFINE(fifo_uart_rx_data);
@@ -545,9 +554,11 @@ void ble_write_thread(void)
 	/* Don't go any further until BLE is initialized */
 	k_sem_take(&ble_init_ok, K_FOREVER);
 	k_sem_take(&ble_connected_sem, K_FOREVER);
+	k_sem_give(&sensor_start_sem);
 
 	int msg_cnt = 0;	
 	int err;
+	printk("BLE start");
 	for (;;) {
 		/* Wait indefinitely for data to be sent over bluetooth */
 		struct ble_data_t *buf = k_fifo_get(&fifo_ble_tx_data,
@@ -564,18 +575,26 @@ void ble_write_thread(void)
 			}
 		}
 
+		LOG_DBG("Data sent");
+
 		k_free(buf);
 	}
 }
 
 void sensor_simulator(void) {
-	k_sem_take(&ble_connected_sem, K_FOREVER);
-
+	k_sem_take(&sensor_start_sem, K_FOREVER);
+	
+	printk("Sensor start\n");
 	for(;;) {
 
-		struct ble_data_t 
-		k_fifo_put(&fifo_ble_tx_data);
+		struct ble_data_t *bleDataPtr = k_malloc(sizeof(struct ble_data_t));
+		bleDataPtr->len = TEST_DATA_SIZE;
+		memcpy(bleDataPtr->data, testData, TEST_DATA_SIZE);
+		k_fifo_put(&fifo_ble_tx_data, bleDataPtr);
 
+		LOG_DBG("Sensor data put");
+
+		k_sleep(K_MSEC(1000));
 	}
 }
 
@@ -583,4 +602,4 @@ K_THREAD_DEFINE(ble_write_thread_id, STACKSIZE, ble_write_thread, NULL, NULL,
 		NULL, PRIORITY, 0, 0);
 
 K_THREAD_DEFINE(sensor_simulator_id, STACKSIZE, sensor_simulator, NULL, NULL,
-		NULL, PRIORITY, 0. 0);
+		NULL, PRIORITY+1, 0, 0);
