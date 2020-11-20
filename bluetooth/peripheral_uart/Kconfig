@@ -34,3 +34,7 @@ config BT_NUS_UART_RX_WAIT_TIME
 	  Wait for RX complete event time in milliseconds
 
 endmenu
+
+module = PERIPHERAL_UART
+module-str = Peripheral UART
+source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"

@@ -594,7 +594,7 @@ void sensor_simulator(void) {
 
 		LOG_DBG("Sensor data put");
 
-		k_sleep(K_MSEC(1000));
+		k_sleep(K_MSEC(10));
 	}
 }
 

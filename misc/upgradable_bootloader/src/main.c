@@ -8,6 +8,10 @@
 #include <sys/printk.h>
 #include <stdio.h>
 
+#include <logging/log.h>
+#define LOG_MODULE_NAME mcuboot_demo
+LOG_MODULE_REGISTER(LOG_MODULE_NAME, CONFIG_MCUBOOT_DEMO_LOG_LEVEL);
+
 #ifdef CONFIG_MCUMGR_CMD_OS_MGMT
 #include "os_mgmt/os_mgmt.h"
 #endif
@@ -24,5 +28,5 @@ void main(void)
 		img_mgmt_register_group();
 	#endif
 
-	printk("Hello World -test! %s\n", CONFIG_BOARD);
+	LOG_DBG("Hello World -test! %s\n", CONFIG_BOARD);
 }
