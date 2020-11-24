@@ -41,8 +41,8 @@ static struct pollfd fds;
 /* Test settings */
 #define SAMPLE_INTERVAL      1  //Seconds - in this application the sample interval only describes how long main sleeps between wakeups when not connected
 #define TRANSMISSION_INTERVAL 5 //Minutes - how often the timer fires to transmit samples
-#define APP_CONNECT_TIMEOUT K_SECONDS(10)
-
+#define MQTT_TIMEOUT K_SECONDS(20)
+#define FIDO_TRACE
 
 /* Work queue and items */
 #define APP_STACK_SIZE 4096
@@ -95,6 +95,49 @@ void bsd_recoverable_error_handler(uint32_t err)
 }
 
 #endif /* defined(CONFIG_BSD_LIBRARY) */
+
+#include <soc.h>
+#include <nrfx.h>
+ 
+#ifdef FIDO_TRACE
+
+void modem_trace_enable(void)
+{
+    /* GPIO configurations for trace and debug */
+    #define CS_PIN_CFG_TRACE_CLK    21 //GPIO_OUT_PIN21_Pos
+    #define CS_PIN_CFG_TRACE_DATA0  22 //GPIO_OUT_PIN22_Pos
+    #define CS_PIN_CFG_TRACE_DATA1  23 //GPIO_OUT_PIN23_Pos
+    #define CS_PIN_CFG_TRACE_DATA2  24 //GPIO_OUT_PIN24_Pos
+    #define CS_PIN_CFG_TRACE_DATA3  25 //GPIO_OUT_PIN25_Pos
+ 
+    NRF_GPIO_Type *port = NRF_P0_NS;
+ 
+    // Configure outputs.
+    // CS_PIN_CFG_TRACE_CLK
+    port->PIN_CNF[CS_PIN_CFG_TRACE_CLK] = (GPIO_PIN_CNF_DRIVE_H0H1 << GPIO_PIN_CNF_DRIVE_Pos) |
+                                                (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos);
+ 
+    // CS_PIN_CFG_TRACE_DATA0
+    port->PIN_CNF[CS_PIN_CFG_TRACE_DATA0] = (GPIO_PIN_CNF_DRIVE_H0H1 << GPIO_PIN_CNF_DRIVE_Pos) |
+                                                  (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos);
+ 
+    // CS_PIN_CFG_TRACE_DATA1
+    port->PIN_CNF[CS_PIN_CFG_TRACE_DATA1] = (GPIO_PIN_CNF_DRIVE_H0H1 << GPIO_PIN_CNF_DRIVE_Pos) |
+                                                  (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos);
+ 
+    // CS_PIN_CFG_TRACE_DATA2
+    port->PIN_CNF[CS_PIN_CFG_TRACE_DATA2] = (GPIO_PIN_CNF_DRIVE_H0H1 << GPIO_PIN_CNF_DRIVE_Pos) |
+                                                  (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos);
+ 
+    // CS_PIN_CFG_TRACE_DATA3
+    port->PIN_CNF[CS_PIN_CFG_TRACE_DATA3] = (GPIO_PIN_CNF_DRIVE_H0H1 << GPIO_PIN_CNF_DRIVE_Pos) |
+                                                  (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos);
+ 
+    port->DIR = 0xFFFFFFFF;
+ 
+}
+
+#endif
 
 /**@brief Function to print strings without null-termination
  */
@@ -542,8 +585,11 @@ void publish_alarm(struct k_work *item) {
 	data_publish(&client, MQTT_QOS_1_AT_LEAST_ONCE, message.data, message.len);
 
 	//Wait for publish acknowledgement
-	k_sem_take(&mqtt_puback_ok, K_FOREVER);
-	
+	err = k_sem_take(&mqtt_puback_ok, MQTT_TIMEOUT);
+	if(err) {
+		LOG_ERR("MQTT publish acknowledgement timed out\n");
+	}
+
 	//Transmission phase over.
 	dk_set_led(DK_LED2, 1);
 	app_disconnect();
@@ -578,7 +624,7 @@ int app_connect(void) {
 	app_connected = true;
 
 	/* Wait for connection to finish */
-	err = k_sem_take(&mqtt_connect_ok, APP_CONNECT_TIMEOUT);
+	err = k_sem_take(&mqtt_connect_ok, MQTT_TIMEOUT);
 	if(err) {
 		LOG_ERR("MQTT connection timed out\n");
 		app_connected = false;
@@ -610,6 +656,7 @@ void app_disconnect(void) {
 	}
 	LOG_INF("MQTT: disconnected");
 
+	k_sleep(k_seconds(1));
 	err = lte_lc_offline();
 	if(err) {
 		LOG_ERR("LTE: Offline mode failed\n");
@@ -684,6 +731,8 @@ void main(void)
 	int err;
 
     LOG_INF("MQTT sensor application example started");
+
+	modem_trace_enable();
 
 	while(modem_configure() != 0) {
 		LOG_WRN("Failed to establish LTE connection.");
