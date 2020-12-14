@@ -36,6 +36,9 @@ static struct sockaddr_storage broker;
 /* File descriptor */
 static struct pollfd fds;
 
+static uint32_t current_rsrp;
+K_MUTEX_DEFINE(rsrp_mutex);
+
 /**** APPLICATION ADDITIONS - Start ****/
 
 /* Test settings */
@@ -631,9 +634,10 @@ int app_connect(void) {
 		return -ENOTCONN;
 	}
 
-	char rsrp_res[128];
-	modem_info_string_get(MODEM_INFO_RSRP, rsrp_res, sizeof(rsrp_res));
-	LOG_INF("RSRP: %s", log_strdup(rsrp_res));
+	//Lock to write out RSRP
+	k_mutex_lock(&rsrp_mutex, K_FOREVER);
+	LOG_INF("RSRP: %d", current_rsrp);
+	k_mutex_unlock(&rsrp_mutex);
 
 	return 0;
 }
@@ -656,7 +660,7 @@ void app_disconnect(void) {
 	}
 	LOG_INF("MQTT: disconnected");
 
-	k_sleep(k_seconds(1));
+	k_sleep(K_SECONDS(1));
 	err = lte_lc_offline();
 	if(err) {
 		LOG_ERR("LTE: Offline mode failed\n");
@@ -724,6 +728,15 @@ void create_message(struct app_message* destination, enum app_msg_type type, uin
 	cJSON_Delete(message);
 }
 
+void rsrp_cb(char rsrp_val) {
+	
+	k_mutex_lock(&rsrp_mutex, K_FOREVER);
+    current_rsrp = rsrp_val;
+    LOG_DBG("RSRP callback: %d", rsrp_val);
+	k_mutex_unlock(&rsrp_mutex);
+
+}
+
 /**** Application code - End ****/
 
 void main(void)
@@ -741,6 +754,7 @@ void main(void)
 		k_sleep(K_SECONDS(CONFIG_APP_CONNECT_RETRY_DELAY));
 	}
 	
+
 	
 	date_time_update_async(date_time_handler);
 	k_sem_take(&date_time_ok,K_FOREVER);
@@ -750,8 +764,10 @@ void main(void)
 	buttons_leds_init(); /* Button for "alarm simulation" and leds for control */
 	timer_init(); /* Periodic sample timer */
 	init_work();  /* Work queue and items for sampling and alarm */
-	modem_info_init();
 	
+	modem_info_init();
+  	modem_info_rsrp_register(rsrp_cb);
+
 	err = lte_lc_offline();
 	if(err) {
 		LOG_ERR("LTE: Offline mode failed");

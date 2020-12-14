@@ -42,8 +42,14 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #define KEY_PASSKEY_REJECT DK_BTN2_MSK
 
 #define NUS_WRITE_TIMEOUT K_MSEC(150)
-#define UART_WAIT_FOR_BUF_DELAY K_MSEC(50)
-#define UART_RX_TIMEOUT 50
+#define UART_WAIT_FOR_BUF_DELAY K_MSEC(5)
+#define UART_RX_TIMEOUT 5
+
+#define INTERVAL_MIN 	80	/* 320 units, 400 ms */
+#define INTERVAL_MAX	80	/* 320 units, 400 ms */
+
+static struct bt_le_conn_param *conn_param =
+	BT_LE_CONN_PARAM(INTERVAL_MIN, INTERVAL_MAX, 0, 400);
 
 static const struct device *uart;
 static struct k_delayed_work uart_work;
@@ -64,6 +70,7 @@ static K_FIFO_DEFINE(fifo_uart_rx_data);
 static struct bt_conn *default_conn;
 static struct bt_nus_client nus_client;
 
+
 static void ble_data_sent(uint8_t err, const uint8_t *const data, uint16_t len)
 {
 	//struct uart_data_t *buf;
@@ -79,15 +86,19 @@ static void ble_data_sent(uint8_t err, const uint8_t *const data, uint16_t len)
 	}
 }
 
-#define HANDLE_DATA
+//#define HANDLE_DATA
 
 static uint8_t ble_data_received(const uint8_t *const data, uint16_t len)
 {
 
 	#ifndef HANDLE_DATA
 
-	printk("BLE: got data\n");
+	static int recv_cnt=0;
+	recv_cnt++;
 
+	if (!(recv_cnt%100)) {
+		printk("BLE: has received %d messages\n", recv_cnt);
+	}
 	#elif defined(HANDLE_DATA)
 
 	int err;
@@ -310,6 +321,7 @@ static int uart_init(void)
 			      UART_RX_TIMEOUT);
 }
 
+
 static void discovery_complete(struct bt_gatt_dm *dm,
 			       void *context)
 {
@@ -502,6 +514,7 @@ static int scan_init(void)
 	int err;
 	struct bt_scan_init_param scan_init = {
 		.connect_if_match = 1,
+		.conn_param = conn_param
 	};
 
 	bt_scan_init(&scan_init);
@@ -624,8 +637,8 @@ void main(void)
 	LOG_INF("Start sending\n");
 	int msg_cnt=0;
 	for (;;) {
-
-		err = bt_nus_client_send(&nus_client, "0123456789", 10);
+		
+		err = bt_nus_client_send(&nus_client, "012345678", 10);
 		if (err) {
 			LOG_WRN("Failed to send data over BLE connection"
 				"(err %d)", err);
@@ -639,7 +652,5 @@ void main(void)
 		if (err) {
 			LOG_WRN("NUS send timeout");
 		}
-		
-		k_sleep(K_MSEC(8));
 	}
 }
