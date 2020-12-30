@@ -1,0 +1,8 @@
+&i2c1 {
+	status = "okay";
+	compatible = "nordic,nrf-twim";
+	sda-pin = <34>;
+	scl-pin = <4>;
+	clock-frequency = <100000>; 
+};
+
