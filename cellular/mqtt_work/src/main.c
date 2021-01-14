@@ -705,8 +705,6 @@ void main(void)
 
     LOG_INF("MQTT sensor application example started");
 
-	modem_trace_enable();
-
 	while(modem_configure() != 0) {
 		LOG_WRN("Failed to establish LTE connection.");
 		LOG_WRN("Will retry in %d seconds.",
