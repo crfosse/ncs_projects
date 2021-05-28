@@ -5,13 +5,12 @@
  */
 
 #include <net/socket.h>
-#include <nrf9160.h>
 #include <stdio.h>
 #include <string.h>
 #include <drivers/adc.h>
 #include <zephyr.h>
 
-struct device *adc_dev;
+const struct device *adc_dev;
 
 #include <hal/nrf_saadc.h>
 #define ADC_DEVICE_NAME DT_ADC_0_NAME
@@ -35,7 +34,7 @@ static const struct adc_channel_cfg m_1st_channel_cfg = {
 };
 
 #define BUFFER_SIZE 1
-static s16_t m_sample_buffer[BUFFER_SIZE];
+static int16_t m_sample_buffer[BUFFER_SIZE];
 
 static int adc_sample(void)
 {
@@ -71,7 +70,7 @@ int main(void)
 {
 	int err;
 
-	printk("nrf91 saadc sampling AIN0 (P0.13)\n");
+	printk("nRF53 SAADC sampling AIN0 (P0.13)\n");
 
 	adc_dev = device_get_binding("ADC_0");
 	if (!adc_dev) {
@@ -86,7 +85,7 @@ int main(void)
 	 * As this generates a _DONE and _RESULT event
 	 * the first result will be incorrect.
 	 */
-	NRF_SAADC_NS->TASKS_CALIBRATEOFFSET = 1;
+	NRF_SAADC->TASKS_CALIBRATEOFFSET = 1;
 	while (1) {
 		err = adc_sample();
 		if (err) {
