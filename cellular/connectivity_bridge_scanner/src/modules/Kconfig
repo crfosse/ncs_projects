@@ -43,9 +43,7 @@ endif
 
 config BRIDGE_BLE_ENABLE
 	bool "Enable BLE UART Service"
-	depends on BT_NUS
 	help
-	  This option enables BLE NUS Service.
 	  BLE advertisement will run continuously when not connected.
 	  NOTE: There is no encryption or authentication enabled for the BLE link.
 
@@ -63,7 +61,7 @@ config BRIDGE_BLE_ALWAYS_ON
 
 endif
 
-if PM_DEVICE
+if DEVICE_POWER_MANAGEMENT
 
 module = BRIDGE_POWER_MGMT
 module-str = Bridge power management

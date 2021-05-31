@@ -12,7 +12,6 @@
 #include <bluetooth/uuid.h>
 #include <bluetooth/gatt.h>
 #include <bluetooth/hci.h>
-#include <bluetooth/services/nus.h>
 
 #define MODULE ble_handler
 #include "module_state_event.h"
@@ -24,143 +23,22 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(MODULE, CONFIG_BRIDGE_BLE_LOG_LEVEL);
 
-#define BLE_RX_BLOCK_SIZE (CONFIG_BT_L2CAP_TX_MTU - 3)
-#define BLE_RX_BUF_COUNT 4
-#define BLE_SLAB_ALIGNMENT 4
-
-#define BLE_TX_BUF_SIZE (CONFIG_BRIDGE_BUF_SIZE * 2)
-
-#define BLE_AD_IDX_FLAGS 0
-#define BLE_AD_IDX_NAME 1
-
-#define ATT_MIN_PAYLOAD 20 /* Minimum L2CAP MTU minus ATT header */
-
-static void bt_send_work_handler(struct k_work *work);
-
-K_MEM_SLAB_DEFINE(ble_rx_slab, BLE_RX_BLOCK_SIZE, BLE_RX_BUF_COUNT, BLE_SLAB_ALIGNMENT);
-RING_BUF_DECLARE(ble_tx_ring_buf, BLE_TX_BUF_SIZE);
-
-static K_SEM_DEFINE(ble_tx_sem, 0, 1);
-
-static K_WORK_DEFINE(bt_send_work, bt_send_work_handler);
-
 static struct bt_conn *current_conn;
-static struct bt_gatt_exchange_params exchange_params;
-static uint32_t nus_max_send_len;
 static atomic_t ready;
 static atomic_t active;
 
-static char bt_device_name[CONFIG_BT_DEVICE_NAME_MAX + 1] = CONFIG_BT_DEVICE_NAME;
-
-static struct bt_data ad[] = {
-	[BLE_AD_IDX_FLAGS] = BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
-	[BLE_AD_IDX_NAME] = BT_DATA(BT_DATA_NAME_COMPLETE, bt_device_name, (sizeof(CONFIG_BT_DEVICE_NAME) - 1)),
-};
-
-static const struct bt_data sd[] = {
-	BT_DATA_BYTES(BT_DATA_UUID128_ALL, BT_UUID_NUS_VAL),
-};
-
-static void exchange_func(struct bt_conn *conn, uint8_t err,
-			  struct bt_gatt_exchange_params *params)
-{
-	if (!err) {
-		nus_max_send_len = bt_nus_get_mtu(conn);
-	}
-}
-
-static void connected(struct bt_conn *conn, uint8_t err)
+void scan_filter_match(struct bt_scan_device_info *device_info,
+		       struct bt_scan_filter_match *filter_match,
+		       bool connectable)
 {
 	char addr[BT_ADDR_LE_STR_LEN];
 
-	if (err) {
-		LOG_WRN("Connection failed (err %u)", err);
-		return;
-	}
+	bt_addr_le_to_str(device_info->recv_info->addr, addr, sizeof(addr));
 
-	bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
-	LOG_INF("Connected %s", log_strdup(addr));
+	printk("Device found: %s\n", addr);
 
-	current_conn = bt_conn_ref(conn);
-	exchange_params.func = exchange_func;
-
-	err = bt_gatt_exchange_mtu(current_conn, &exchange_params);
-	if (err) {
-		LOG_WRN("bt_gatt_exchange_mtu: %d", err);
-	}
-
-	ring_buf_reset(&ble_tx_ring_buf);
-
-	struct peer_conn_event *event = new_peer_conn_event();
-
-	event->peer_id = PEER_ID_BLE;
-	event->dev_idx = 0;
-	event->baudrate = 0; /* Don't care */
-	event->conn_state = PEER_STATE_CONNECTED;
-	EVENT_SUBMIT(event);
-}
-
-static void disconnected(struct bt_conn *conn, uint8_t reason)
-{
-	char addr[BT_ADDR_LE_STR_LEN];
-
-	bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
-	LOG_INF("Disconnected: %s (reason %u)", log_strdup(addr), reason);
-
-	if (current_conn) {
-		bt_conn_unref(current_conn);
-		current_conn = NULL;
-	}
-
-	struct peer_conn_event *event = new_peer_conn_event();
-
-	event->peer_id = PEER_ID_BLE;
-	event->dev_idx = 0;
-	event->baudrate = 0; /* Don't care */
-	event->conn_state = PEER_STATE_DISCONNECTED;
-	EVENT_SUBMIT(event);
-}
-
-static struct bt_conn_cb conn_callbacks = {
-	.connected    = connected,
-	.disconnected = disconnected,
-};
-
-static void bt_send_work_handler(struct k_work *work)
-{
-	uint16_t len;
-	uint8_t *buf;
-	int err;
-	bool notif_disabled = false;
-
-	do {
-		len = ring_buf_get_claim(&ble_tx_ring_buf, &buf, nus_max_send_len);
-
-		err = bt_nus_send(current_conn, buf, len);
-		if (err == -EINVAL) {
-			notif_disabled = true;
-			len = 0;
-		} else if (err) {
-			len = 0;
-		}
-
-		err = ring_buf_get_finish(&ble_tx_ring_buf, len);
-		if (err) {
-			LOG_ERR("ring_buf_get_finish: %d", err);
-			break;
-		}
-	} while (len != 0 && !ring_buf_is_empty(&ble_tx_ring_buf));
-
-	if (notif_disabled) {
-		/* Peer has not enabled notifications: don't accumulate data */
-		ring_buf_reset(&ble_tx_ring_buf);
-	}
-}
-
-static void bt_receive_cb(struct bt_conn *conn, const uint8_t *const data,
-			  uint16_t len)
-{
-	void *buf;
+	/*
+		void *buf;
 	uint16_t remainder;
 
 	remainder = len;
@@ -186,88 +64,55 @@ static void bt_receive_cb(struct bt_conn *conn, const uint8_t *const data,
 		event->len = copy_len;
 		EVENT_SUBMIT(event);
 	} while (remainder);
+	*/
+
 }
 
-static void bt_sent_cb(struct bt_conn *conn)
-{
-	if (ring_buf_is_empty(&ble_tx_ring_buf)) {
-		return;
-	}
+BT_SCAN_CB_INIT(scan_cb, scan_filter_match, NULL, scan_connecting_error, NULL);
 
-	k_work_submit(&bt_send_work);
-}
-
-static struct bt_nus_cb nus_cb = {
-	.received = bt_receive_cb,
-	.sent = bt_sent_cb,
-};
-
-static void adv_start(void)
+static void scan_start(void)
 {
 	int err;
 
-	if (!atomic_get(&ready)) {
-		/* Advertising will start when ready */
+	struct bt_le_scan_param scan_param = {
+		.type = BT_LE_SCAN_TYPE_ACTIVE,
+		.options = BT_LE_SCAN_OPT_NONE,
+		.interval = 0x0010,
+		.window = 0x0010,
+	};
+
+	struct bt_scan_init_param scan_init = {
+		.connect_if_match = 1,
+		.scan_param = &scan_param,
+		.conn_param = BT_LE_CONN_PARAM_DEFAULT,
+	};
+
+	bt_scan_init(&scan_init);
+	bt_scan_cb_register(&scan_cb);
+
+	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_UUID, BT_UUID_THINGY);
+	if (err) {
+		printk("Scanning filters cannot be set\n");
 		return;
 	}
 
-	err = bt_le_adv_start(
-		BT_LE_ADV_PARAM(
-			BT_LE_ADV_OPT_CONNECTABLE,
-			BT_GAP_ADV_SLOW_INT_MIN,
-			BT_GAP_ADV_SLOW_INT_MAX,
-			NULL),
-		ad, ARRAY_SIZE(ad), sd, ARRAY_SIZE(sd));
+	err = bt_scan_filter_enable(BT_SCAN_UUID_FILTER, false);
 	if (err) {
-		LOG_ERR("bt_le_adv_start: %d", err);
-	} else {
-		module_set_state(MODULE_STATE_READY);
+		printk("Filters cannot be turned on\n");
 	}
-}
 
-static void adv_stop(void)
-{
-	int err;
-
-	err = bt_le_adv_stop();
+	err = bt_scan_start(BT_SCAN_TYPE_SCAN_ACTIVE);
 	if (err) {
-		LOG_ERR("bt_le_adv_stop: %d", err);
-	} else {
-		module_set_state(MODULE_STATE_STANDBY);
-	}
-}
-
-static void name_update(const char *name)
-{
-	int err;
-
-	err = bt_set_name(name);
-	if (err) {
-		LOG_WRN("bt_set_name: %d", err);
-		return;
+		printk("Scanning failed to start, err %d\n", err);
 	}
 
-	strcpy(bt_device_name, name);
-	ad[BLE_AD_IDX_NAME].data_len = strlen(name);
-
-	err = bt_le_adv_update_data(ad, ARRAY_SIZE(ad), sd, ARRAY_SIZE(sd));
-	if (err && err != -EAGAIN) {
-		/* Ignore error return when advertising is not running */
-		LOG_WRN("bt_le_adv_update_data: %d", err);
-		return;
-	}
+	printk("Scanning...\n");
 }
 
 static void bt_ready(int err)
 {
 	if (err) {
 		LOG_ERR("%s: %d", __func__, err);
-		return;
-	}
-
-	err = bt_nus_init(&nus_cb);
-	if (err) {
-		LOG_ERR("bt_nus_init: %d", err);
 		return;
 	}
 
@@ -278,13 +123,15 @@ static void bt_ready(int err)
 #endif
 
 	if (atomic_get(&active)) {
-		adv_start();
+		scan_start();
 	}
 }
 
 static bool event_handler(const struct event_header *eh)
 {
 	if (is_uart_data_event(eh)) {
+		
+		#ifdef OG_CODE
 		const struct uart_data_event *event =
 			cast_uart_data_event(eh);
 
@@ -315,6 +162,8 @@ static bool event_handler(const struct event_header *eh)
 			k_work_submit(&bt_send_work);
 		}
 
+		#endif
+
 		return false;
 	}
 
@@ -335,16 +184,16 @@ static bool event_handler(const struct event_header *eh)
 		switch (event->cmd) {
 		case BLE_CTRL_ENABLE:
 			if (!atomic_set(&active, true)) {
-				adv_start();
+				scan_start();
 			}
 			break;
 		case BLE_CTRL_DISABLE:
 			if (atomic_set(&active, false)) {
-				adv_stop();
+				scan_stop();
 			}
 			break;
 		case BLE_CTRL_NAME_UPDATE:
-			name_update(event->param.name_update);
+			printk("Name Update\n");
 			break;
 		default:
 			/* Unhandled control message */

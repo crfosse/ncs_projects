@@ -44,8 +44,7 @@ LOG_MODULE_REGISTER(MODULE, CONFIG_BRIDGE_MSC_LOG_LEVEL);
  * Format: (_key, _presentation_name, _size, _default, _callback, _enabled)
  */
 #define CONFIG_LIST \
-	X(ble_enable, BLE_ENABLED, 1, "0", ble_enable_opt_cb, (IS_ENABLED(CONFIG_BRIDGE_BLE_ENABLE) && !IS_ENABLED(CONFIG_BRIDGE_BLE_ALWAYS_ON))) \
-	X(ble_name, BLE_NAME, CONFIG_BT_DEVICE_NAME_MAX, CONFIG_BT_DEVICE_NAME, ble_name_opt_cb, IS_ENABLED(CONFIG_BT_DEVICE_NAME_DYNAMIC))
+	X(ble_enable, BLE_ENABLED, 1, "0", ble_enable_opt_cb, (IS_ENABLED(CONFIG_BRIDGE_BLE_ENABLE) && !IS_ENABLED(CONFIG_BRIDGE_BLE_ALWAYS_ON)))
 
 struct cfg_option {
 	const char *display_name;
@@ -344,7 +343,6 @@ static void parse_file(const char *mnt_point)
 		return;
 	}
 
-	fs_file_t_init(&file);
 	err = fs_open(&file, fname, FS_O_CREATE | FS_O_RDWR);
 	if (err) {
 		LOG_ERR("fs_open: %d", err);
