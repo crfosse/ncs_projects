@@ -34,7 +34,7 @@ void main(void)
 	printk("Value of NRF_TWIM2_NS->FREQUENCY: %d \n",NRF_TWIM1_NS->FREQUENCY);
 	printk("26738688 -> 100k\n");
         
-    for (uint8_t i = 4; i <= 0xFF; i++) {
+    for (uint8_t i = 4; i <= 0x7F; i++) {
 		struct i2c_msg msgs[1];
 		uint8_t dst = 1;
 
