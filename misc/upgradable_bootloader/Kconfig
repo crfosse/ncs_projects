@@ -1,7 +1,0 @@
-menu "Zephyr Kernel"
-source "$ZEPHYR_BASE/Kconfig.zephyr"
-endmenu
-
-module = MCUBOOT_DEMO
-module-str = MCUBoot Demo
-source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"

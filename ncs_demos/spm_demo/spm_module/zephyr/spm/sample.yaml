@@ -1,0 +1,8 @@
+sample:
+  name: spm Sample
+tests:
+  test_build:
+    build_only: true
+    build_on_all: true
+    platform_whitelist: nrf5340pdk_nrf5340_cpuapp
+    tags: ci_build
