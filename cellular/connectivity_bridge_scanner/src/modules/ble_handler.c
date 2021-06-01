@@ -12,6 +12,8 @@
 #include <bluetooth/uuid.h>
 #include <bluetooth/gatt.h>
 #include <bluetooth/hci.h>
+#include <bluetooth/gatt_dm.h>
+#include <bluetooth/scan.h>
 
 #define MODULE ble_handler
 #include "module_state_event.h"
@@ -23,9 +25,44 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(MODULE, CONFIG_BRIDGE_BLE_LOG_LEVEL);
 
-static struct bt_conn *current_conn;
+/* Thinghy advertisement UUID */
+#define BT_UUID_THINGY                                                         \
+	BT_UUID_DECLARE_128(0x42, 0x00, 0x74, 0xA9, 0xFF, 0x52, 0x10, 0x9B,    \
+			    0x33, 0x49, 0x35, 0x9B, 0x00, 0x01, 0x68, 0xEF)
+
+/* Thingy service UUID */
+#define BT_UUID_TMS                                                            \
+	BT_UUID_DECLARE_128(0x42, 0x00, 0x74, 0xA9, 0xFF, 0x52, 0x10, 0x9B,    \
+			    0x33, 0x49, 0x35, 0x9B, 0x00, 0x04, 0x68, 0xEF)
+
+/* Thingy characteristic UUID */
+#define BT_UUID_TOC                                                            \
+	BT_UUID_DECLARE_128(0x42, 0x00, 0x74, 0xA9, 0xFF, 0x52, 0x10, 0x9B,    \
+			    0x33, 0x49, 0x35, 0x9B, 0x03, 0x04, 0x68, 0xEF)
+
+/* Bluetooth LE device "any" address, not a valid address */
+#define BT_ADDR_BROODMINDER  ((bt_addr_t[]) { { { 0x06, 0x09, 0x10, 0, 0, 0 } } })
+
+#define BLE_RX_BLOCK_SIZE (CONFIG_BT_L2CAP_TX_MTU - 3)
+#define BLE_RX_BUF_COUNT 4
+#define BLE_SLAB_ALIGNMENT 4
+
+#define ADV_BUF_SIZE 128
+
+K_MEM_SLAB_DEFINE(ble_rx_slab, BLE_RX_BLOCK_SIZE, BLE_RX_BUF_COUNT, BLE_SLAB_ALIGNMENT);
+
 static atomic_t ready;
 static atomic_t active;
+
+bool bt_parse_cb(struct bt_data *data, void *user_data) {
+
+	//LOG_INF("Device found: %s", log_strdup(user_data));
+	char buffer[ADV_BUF_SIZE];
+	memcpy(buffer, data->data, data->data_len);
+	LOG_INF("Parsed adv -- Type: %d | Data: %s", data->type, log_strdup(buffer));
+
+	return true;
+}
 
 void scan_filter_match(struct bt_scan_device_info *device_info,
 		       struct bt_scan_filter_match *filter_match,
@@ -35,10 +72,12 @@ void scan_filter_match(struct bt_scan_device_info *device_info,
 
 	bt_addr_le_to_str(device_info->recv_info->addr, addr, sizeof(addr));
 
-	printk("Device found: %s\n", addr);
+	LOG_INF("Device found: %s", log_strdup(addr));
 
-	/*
-		void *buf;
+	bt_data_parse(device_info->adv_data, bt_parse_cb, (void *)addr);
+
+	#ifdef A
+	void *buf;
 	uint16_t remainder;
 
 	remainder = len;
@@ -64,11 +103,64 @@ void scan_filter_match(struct bt_scan_device_info *device_info,
 		event->len = copy_len;
 		EVENT_SUBMIT(event);
 	} while (remainder);
-	*/
+	#endif
+}
+
+void scan_connecting_error(struct bt_scan_device_info *device_info)
+{
+	LOG_ERR("Connection to peer failed!");
+}
+
+bool bt_parse_cb_nomatch(struct bt_data *data, void *user_data) {
+
+	//LOG_INF("Device found: %s", log_strdup(user_data));
+
+	switch(data->type) 
+	{
+		case BT_DATA_NAME_COMPLETE:
+			char buffer[ADV_BUF_SIZE];
+			memcpy(buffer, data->data, data->data_len);
+
+			if(!strcmp("47:05:9B",buffer)) {
+				char addr_str[BT_ADDR_STR_LEN];
+				bt_addr_to_str(user_data, addr_str, BT_ADDR_STR_LEN);
+				LOG_INF("Got address %s: ", log_strdup(addr_str));
+			}
+
+			return false;
+
+			break;
+
+		default:
+			//nothing here
+			break;
+	}
+
+	return true;
+}
+
+void scan_filter_no_match(struct bt_scan_device_info *device_info,bool connectable) {
+
+	
+	bt_data_parse(device_info->adv_data, bt_parse_cb, (void *)device_info->recv_info->addr);
 
 }
 
-BT_SCAN_CB_INIT(scan_cb, scan_filter_match, NULL, scan_connecting_error, NULL);
+BT_SCAN_CB_INIT(scan_cb, scan_filter_match, scan_filter_no_match, scan_connecting_error, NULL);
+
+static void scan_stop(void)
+{
+	int err;
+
+	LOG_INF("Stopping scan");
+
+	err = bt_le_scan_stop();
+	if (err) {
+		LOG_ERR("bt_le_scan_stop: %d", err);
+	} else {
+		module_set_state(MODULE_STATE_STANDBY);
+	}
+}
 
 static void scan_start(void)
 {
@@ -82,9 +174,9 @@ static void scan_start(void)
 	};
 
 	struct bt_scan_init_param scan_init = {
-		.connect_if_match = 1,
+		.connect_if_match = 0,
 		.scan_param = &scan_param,
-		.conn_param = BT_LE_CONN_PARAM_DEFAULT,
+		.conn_param = NULL,
 	};
 
 	bt_scan_init(&scan_init);
@@ -92,21 +184,27 @@ static void scan_start(void)
 
 	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_UUID, BT_UUID_THINGY);
 	if (err) {
-		printk("Scanning filters cannot be set\n");
+		LOG_ERR("UUID scanning filters cannot be set");
 		return;
 	}
 
-	err = bt_scan_filter_enable(BT_SCAN_UUID_FILTER, false);
+	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_ADDR, BT_ADDR_BROODMINDER);
 	if (err) {
-		printk("Filters cannot be turned on\n");
+		LOG_ERR("ADDR scanning filters cannot be set");
+		return;
+	}
+
+	err = bt_scan_filter_enable(BT_SCAN_ADDR_FILTER | BT_SCAN_UUID_FILTER, false);
+	if (err) {
+		LOG_ERR("Filters cannot be turned on");
 	}
 
 	err = bt_scan_start(BT_SCAN_TYPE_SCAN_ACTIVE);
 	if (err) {
-		printk("Scanning failed to start, err %d\n", err);
+		LOG_ERR("Scanning failed to start, err %d", err);
 	}
 
-	printk("Scanning...\n");
+	LOG_INF("Scanning...");
 }
 
 static void bt_ready(int err)
@@ -168,12 +266,12 @@ static bool event_handler(const struct event_header *eh)
 	}
 
 	if (is_ble_data_event(eh)) {
+		
+		LOG_INF("BLE_DATA_EVENT");
 		const struct ble_data_event *event =
 			cast_ble_data_event(eh);
-
 		/* All subscribers have gotten a chance to copy data at this point */
 		k_mem_slab_free(&ble_rx_slab, (void **) &event->buf);
-
 		return false;
 	}
 
@@ -183,17 +281,19 @@ static bool event_handler(const struct event_header *eh)
 
 		switch (event->cmd) {
 		case BLE_CTRL_ENABLE:
+			LOG_INF("BLE_CTRL_ENABLE");
 			if (!atomic_set(&active, true)) {
 				scan_start();
 			}
 			break;
 		case BLE_CTRL_DISABLE:
+			LOG_INF("BLE_CTRL_DISABLE");
 			if (atomic_set(&active, false)) {
 				scan_stop();
 			}
 			break;
 		case BLE_CTRL_NAME_UPDATE:
-			printk("Name Update\n");
+			LOG_INF("BLE_CTRL_NAME_UPDATE");
 			break;
 		default:
 			/* Unhandled control message */
@@ -213,15 +313,13 @@ static bool event_handler(const struct event_header *eh)
 
 			atomic_set(&active, false);
 
-			nus_max_send_len = ATT_MIN_PAYLOAD;
-
 			err = bt_enable(bt_ready);
 			if (err) {
 				LOG_ERR("bt_enable: %d", err);
 				return false;
 			}
-
-			bt_conn_cb_register(&conn_callbacks);
+			
+			LOG_INF("BT enabled");
 		}
 
 		return false;

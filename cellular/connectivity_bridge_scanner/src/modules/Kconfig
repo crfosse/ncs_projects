@@ -44,7 +44,7 @@ endif
 config BRIDGE_BLE_ENABLE
 	bool "Enable BLE UART Service"
 	help
-	  BLE advertisement will run continuously when not connected.
+	  Device will scan continiously while enabled.
 	  NOTE: There is no encryption or authentication enabled for the BLE link.
 
 if BRIDGE_BLE_ENABLE

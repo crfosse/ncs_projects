@@ -139,23 +139,6 @@ static bool ble_enable_opt_cb(char *opt)
 	return true;
 }
 
-static bool ble_name_opt_cb(char *opt)
-{
-	static char ble_name_buffer[CONFIG_BT_DEVICE_NAME_MAX + 1];
-
-	__ASSERT_NO_MSG(strlen(opt) < sizeof(ble_name_buffer));
-
-	strcpy(ble_name_buffer, opt);
-
-	struct ble_ctrl_event *event = new_ble_ctrl_event();
-
-	event->cmd = BLE_CTRL_NAME_UPDATE;
-	event->param.name_update = ble_name_buffer;
-	EVENT_SUBMIT(event);
-
-	return true;
-}
-
 static void save_settings(void)
 {
 	int err;
