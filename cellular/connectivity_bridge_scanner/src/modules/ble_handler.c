@@ -25,23 +25,7 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(MODULE, CONFIG_BRIDGE_BLE_LOG_LEVEL);
 
-/* Thinghy advertisement UUID */
-#define BT_UUID_THINGY                                                         \
-	BT_UUID_DECLARE_128(0x42, 0x00, 0x74, 0xA9, 0xFF, 0x52, 0x10, 0x9B,    \
-			    0x33, 0x49, 0x35, 0x9B, 0x00, 0x01, 0x68, 0xEF)
-
-/* Thingy service UUID */
-#define BT_UUID_TMS                                                            \
-	BT_UUID_DECLARE_128(0x42, 0x00, 0x74, 0xA9, 0xFF, 0x52, 0x10, 0x9B,    \
-			    0x33, 0x49, 0x35, 0x9B, 0x00, 0x04, 0x68, 0xEF)
-
-/* Thingy characteristic UUID */
-#define BT_UUID_TOC                                                            \
-	BT_UUID_DECLARE_128(0x42, 0x00, 0x74, 0xA9, 0xFF, 0x52, 0x10, 0x9B,    \
-			    0x33, 0x49, 0x35, 0x9B, 0x03, 0x04, 0x68, 0xEF)
-
-/* Bluetooth LE device "any" address, not a valid address */
-#define BT_ADDR_BROODMINDER  ((bt_addr_t[]) { { { 0x06, 0x09, 0x10, 0, 0, 0 } } })
+#define BT_ADDR_BROODMINDER  "06:09:16"
 
 #define BLE_RX_BLOCK_SIZE (CONFIG_BT_L2CAP_TX_MTU - 3)
 #define BLE_RX_BUF_COUNT 4
@@ -56,10 +40,41 @@ static atomic_t active;
 
 bool bt_parse_cb(struct bt_data *data, void *user_data) {
 
-	//LOG_INF("Device found: %s", log_strdup(user_data));
-	char buffer[ADV_BUF_SIZE];
-	memcpy(buffer, data->data, data->data_len);
-	LOG_INF("Parsed adv -- Type: %d | Data: %s", data->type, log_strdup(buffer));
+	int err;
+	void *buffer;
+
+
+	LOG_INF("Parsed adv -- Type: %d", data->type);
+	switch (data->type) {
+
+		BT_DATA_NAME_COMPLETE:
+
+			memcpy(buffer, data->data, data->data_len);
+			LOG_INF("Got data from device: %s ", log_strdup(buffer));
+
+			break;
+
+		BT_DATA_MANUFACTURER_DATA:
+
+
+				err = k_mem_slab_alloc(&adv_data_slab, &buf, K_NO_WAIT);
+				if (err) {
+					LOG_WRN("BLE RX overflow");
+					break;
+				}
+
+				struct ble_data_event *event = new_ble_data_event();
+				memcpy(event->buf,data->data);
+				event->len = data->data_len;
+				EVENT_SUBMIT(event);
+
+			return false;
+
+			break;
+
+		default:
+			break;
+	}
 
 	return true;
 }
@@ -72,38 +87,15 @@ void scan_filter_match(struct bt_scan_device_info *device_info,
 
 	bt_addr_le_to_str(device_info->recv_info->addr, addr, sizeof(addr));
 
-	LOG_INF("Device found: %s", log_strdup(addr));
+	int ret = !strncmp(BT_ADDR_BROODMINDER, addr, 9);
 
-	bt_data_parse(device_info->adv_data, bt_parse_cb, (void *)addr);
+	if(!ret) {
+		LOG_INF("Device found: %s", log_strdup(addr));
 
-	#ifdef A
-	void *buf;
-	uint16_t remainder;
-
-	remainder = len;
-
-	do {
-		uint16_t copy_len;
-		int err;
-
-		err = k_mem_slab_alloc(&ble_rx_slab, &buf, K_NO_WAIT);
-		if (err) {
-			LOG_WRN("BLE RX overflow");
-			break;
-		}
-
-		copy_len = remainder > BLE_RX_BLOCK_SIZE ?
-			BLE_RX_BLOCK_SIZE : remainder;
-		remainder -= copy_len;
-		memcpy(buf, data, copy_len);
-
-		struct ble_data_event *event = new_ble_data_event();
-
-		event->buf = buf;
-		event->len = copy_len;
-		EVENT_SUBMIT(event);
-	} while (remainder);
-	#endif
+		bt_data_parse(device_info->adv_data, bt_parse_cb, (void *)addr);
+	} else {
+		LOG_INF("Not a Broodminder address: %d", ret);
+	}
 }
 
 void scan_connecting_error(struct bt_scan_device_info *device_info)
@@ -115,19 +107,18 @@ bool bt_parse_cb_nomatch(struct bt_data *data, void *user_data) {
 
 	//LOG_INF("Device found: %s", log_strdup(user_data));
 
+	char buffer[ADV_BUF_SIZE];
+
 	switch(data->type) 
 	{
 		case BT_DATA_NAME_COMPLETE:
-			char buffer[ADV_BUF_SIZE];
+
 			memcpy(buffer, data->data, data->data_len);
-
-			if(!strcmp("47:05:9B",buffer)) {
-				char addr_str[BT_ADDR_STR_LEN];
-				bt_addr_to_str(user_data, addr_str, BT_ADDR_STR_LEN);
-				LOG_INF("Got address %s: ", log_strdup(addr_str));
+			if(!strncmp("47:05:9B",buffer,data->data_len)) {
+				char addr_str_le[BT_ADDR_LE_STR_LEN];
+				bt_addr_le_to_str(user_data, addr_str_le, BT_ADDR_LE_STR_LEN);
+				LOG_INF("Got LE address: %s ", log_strdup(addr_str_le));
 			}
-
-			return false;
 
 			break;
 
@@ -142,7 +133,7 @@ bool bt_parse_cb_nomatch(struct bt_data *data, void *user_data) {
 void scan_filter_no_match(struct bt_scan_device_info *device_info,bool connectable) {
 
 	
-	bt_data_parse(device_info->adv_data, bt_parse_cb, (void *)device_info->recv_info->addr);
+	bt_data_parse(device_info->adv_data, bt_parse_cb_nomatch, (void *)device_info->recv_info->addr);
 
 }
 
@@ -182,19 +173,24 @@ static void scan_start(void)
 	bt_scan_init(&scan_init);
 	bt_scan_cb_register(&scan_cb);
 
-	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_UUID, BT_UUID_THINGY);
+	//err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_UUID, BT_UUID_THINGY);
+	//if (err) {
+	//	LOG_ERR("UUID scanning filters cannot be set");
+	//	return;
+	//}
+	
+	static const uint16_t broodminder_manufacturer_id = 0x028d;
+    struct bt_scan_manufacturer_data broodminder_id_filter;
+    broodminder_id_filter.data = (uint8_t*) &broodminder_manufacturer_id;
+    broodminder_id_filter.data_len = 2;
+
+	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_MANUFACTURER_DATA, &broodminder_id_filter);
 	if (err) {
-		LOG_ERR("UUID scanning filters cannot be set");
+		LOG_ERR("MANUFACTURER scanning filters cannot be set");
 		return;
 	}
 
-	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_ADDR, BT_ADDR_BROODMINDER);
-	if (err) {
-		LOG_ERR("ADDR scanning filters cannot be set");
-		return;
-	}
-
-	err = bt_scan_filter_enable(BT_SCAN_ADDR_FILTER | BT_SCAN_UUID_FILTER, false);
+	err = bt_scan_filter_enable(BT_SCAN_MANUFACTURER_DATA_FILTER, false);
 	if (err) {
 		LOG_ERR("Filters cannot be turned on");
 	}
@@ -203,6 +199,7 @@ static void scan_start(void)
 	if (err) {
 		LOG_ERR("Scanning failed to start, err %d", err);
 	}
+
 
 	LOG_INF("Scanning...");
 }
