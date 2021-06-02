@@ -25,7 +25,7 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(MODULE, CONFIG_BRIDGE_BLE_LOG_LEVEL);
 
-#define BT_ADDR_BROODMINDER  "06:09:16"
+#define BT_ADDR  "06:09:16"
 
 #define BLE_RX_BLOCK_SIZE (CONFIG_BT_L2CAP_TX_MTU - 3)
 #define BLE_RX_BUF_COUNT 4
@@ -87,14 +87,14 @@ void scan_filter_match(struct bt_scan_device_info *device_info,
 
 	bt_addr_le_to_str(device_info->recv_info->addr, addr, sizeof(addr));
 
-	int ret = !strncmp(BT_ADDR_BROODMINDER, addr, 9);
+	int ret = !strncmp(BT_ADDR, addr, 9);
 
 	if(!ret) {
 		LOG_INF("Device found: %s", log_strdup(addr));
 
 		bt_data_parse(device_info->adv_data, bt_parse_cb, (void *)addr);
 	} else {
-		LOG_INF("Not a Broodminder address: %d", ret);
+		LOG_INF("Not a relevant address: %d", ret);
 	}
 }
 
@@ -179,12 +179,12 @@ static void scan_start(void)
 	//	return;
 	//}
 	
-	static const uint16_t broodminder_manufacturer_id = 0x028d;
-    struct bt_scan_manufacturer_data broodminder_id_filter;
-    broodminder_id_filter.data = (uint8_t*) &broodminder_manufacturer_id;
-    broodminder_id_filter.data_len = 2;
+	static const uint16_t manufacturer_id = 0x028d;
+    struct bt_scan_manufacturer_data id_filter;
+    id_filter.data = (uint8_t*) &manufacturer_id;
+    id_filter.data_len = 2;
 
-	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_MANUFACTURER_DATA, &broodminder_id_filter);
+	err = bt_scan_filter_add(BT_SCAN_FILTER_TYPE_MANUFACTURER_DATA, &id_filter);
 	if (err) {
 		LOG_ERR("MANUFACTURER scanning filters cannot be set");
 		return;
