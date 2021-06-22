@@ -434,30 +434,47 @@ int gcloud_provision(void) {
 	tls_config.sec_tag_list = sec_tag_list;
 	tls_config.hostname = GCLOUD_HOSTNAME;
 
-    /* Delete certificates */
     nrf_sec_tag_t sec_tag = GCLOUD_SEC_TAG;
 
-    for (enum modem_key_mgmt_cred_type type = 0; type < 5; type++) {
-        err = modem_key_mgmt_delete(sec_tag, type);
-        if (err == -ENOENT) {
-            LOG_DBG("No key present. Ignore and continue.");
-        } else if (err) {
-            LOG_ERR("key delete err: [%d] %s", err, strerror(err));
-        }
-    }
-    // LOG_DBG("CERT:\n%s\n", GCLOUD_CA_CERTIFICATE);
-    /* Provision CA Certificate */
-    err = modem_key_mgmt_write(
-        GCLOUD_SEC_TAG,
-        MODEM_KEY_MGMT_CRED_TYPE_CA_CHAIN,
-        GCLOUD_CA_CERTIFICATE,
-        strlen(GCLOUD_CA_CERTIFICATE));
-    if (err != 0) {
-        LOG_ERR("GCLOUD_CA_CERTIFICATE err: [%d] %s\n", err, strerror(err));
-        return err;
+
+    bool cert_exists = false;
+    uint8_t flags;
+
+    err = modem_key_mgmt_exists(GCLOUD_SEC_TAG, MODEM_KEY_MGMT_CRED_TYPE_CA_CHAIN, &cert_exists, &flags);
+    if(err) {
+        LOG_ERR("Could not check if key exists. Will delete and try to write. Err: %d", err);
+        cert_exists = false;
     }
 
-    return 0;
+    if(cert_exists) {
+        LOG_DBG("CA Certificate is already present and we can continue.");
+        return 0;
+    } else {
+        LOG_DBG("No certificates present. Deleteting and writing new.");
+            /* Delete certificates */
+
+        for (enum modem_key_mgmt_cred_type type = 0; type < 5; type++) {
+            err = modem_key_mgmt_delete(sec_tag, type);
+            if (err == -ENOENT) {
+                LOG_DBG("No key present. Ignore and continue.");
+            } else if (err) {
+                LOG_ERR("key delete err: [%d] %s", err, strerror(err));
+            }
+        }
+        // LOG_DBG("CERT:\n%s\n", GCLOUD_CA_CERTIFICATE);
+        /* Provision CA Certificate */
+        err = modem_key_mgmt_write(
+            GCLOUD_SEC_TAG,
+            MODEM_KEY_MGMT_CRED_TYPE_CA_CHAIN,
+            GCLOUD_CA_CERTIFICATE,
+            strlen(GCLOUD_CA_CERTIFICATE));
+        if (err != 0) {
+            LOG_ERR("GCLOUD_CA_CERTIFICATE err: [%d] %s\n", err, strerror(err));
+            return err;
+        }
+
+        return 0;
+    }
 }
 
 static void mqtt_event_handler(struct mqtt_client *const cli,

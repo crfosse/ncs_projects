@@ -212,9 +212,6 @@ C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/mod
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_notif/CMakeFiles/..__nrf__lib__at_notif.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_notif/CMakeFiles/edit_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_notif/CMakeFiles/rebuild_cache.dir
-C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_host/CMakeFiles/..__nrf__lib__at_host.dir
-C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_host/CMakeFiles/edit_cache.dir
-C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_host/CMakeFiles/rebuild_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_cmd_parser/CMakeFiles/..__nrf__lib__at_cmd_parser.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_cmd_parser/CMakeFiles/edit_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/lib/at_cmd_parser/CMakeFiles/rebuild_cache.dir
@@ -326,8 +323,9 @@ C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/mod
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/open-amp/CMakeFiles/rebuild_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/loramac-node/CMakeFiles/edit_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/loramac-node/CMakeFiles/rebuild_cache.dir
-C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/segger/CMakeFiles/edit_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/segger/CMakeFiles/rebuild_cache.dir
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/segger/CMakeFiles/modules__segger.dir
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/segger/CMakeFiles/edit_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/tinycbor/CMakeFiles/edit_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/tinycbor/CMakeFiles/rebuild_cache.dir
 C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/tinycrypt/CMakeFiles/edit_cache.dir

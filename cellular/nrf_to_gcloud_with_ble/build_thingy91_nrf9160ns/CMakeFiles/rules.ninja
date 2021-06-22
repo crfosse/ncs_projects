@@ -607,25 +607,6 @@ rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__lib__at_notif_
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__.2e.2e__nrf__lib__at_host_
-  depfile = $DEP_FILE
-  deps = gcc
-  command = C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
-  description = Building C object $out
-
-
-#############################################
-# Rule for linking C static library.
-
-rule C_STATIC_LIBRARY_LINKER__.2e.2e__nrf__lib__at_host_
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
-  description = Linking C static library $TARGET_FILE
-  restat = $RESTAT
-
-
-#############################################
-# Rule for compiling C files.
-
 rule C_COMPILER__.2e.2e__nrf__lib__at_cmd_parser_
   depfile = $DEP_FILE
   deps = gcc
@@ -789,6 +770,25 @@ rule C_COMPILER__modules__hal_nordic__nrfx_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__modules__hal_nordic__nrfx_
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__modules__segger_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__modules__segger_
   command = cmd.exe /C "$PRE_LINK && "C:\Program Files\CMake\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\cafo\ncs\v1.5.1\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT

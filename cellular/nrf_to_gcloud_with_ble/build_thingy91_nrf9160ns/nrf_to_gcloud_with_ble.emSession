@@ -2,7 +2,7 @@
 <session>
  <Bookmarks/>
  <Breakpoints groups="Breakpoints" active_group="Breakpoints">
-  <BreakpointListItem trigger="" line="413" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../src/main.c" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="254" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../src/main.c" useHWbreakpoint="false"/>
   <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault;SecureFault"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
@@ -37,6 +37,8 @@
   <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/date_time/lib..__nrf__lib__date_time.a;C_COMPILER__.2e.2e__nrf__lib__date_time_"/>
   <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/lte_link_control/lib..__nrf__lib__lte_link_control.a"/>
   <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/lte_link_control/lib..__nrf__lib__lte_link_control.a;C_COMPILER__.2e.2e__nrf__lib__lte_link_control_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/arch/arch/arm/core/aarch32/cortex_m/libarch__arm__core__aarch32__cortex_m.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/arch/arch/arm/core/aarch32/cortex_m/libarch__arm__core__aarch32__cortex_m.a;ASM_COMPILER__arch__arm__core__aarch32__cortex_m_"/>
   <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a"/>
   <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a;ASM_COMPILER__arch__arm__core__aarch32_"/>
   <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/kernel/libkernel.a"/>
@@ -75,7 +77,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="412" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/main.c" selected="0" top="401" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="26" y="253" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/main.c" selected="0" top="241" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="368" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/kernel/init.c" selected="0" top="356" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="224" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/subsys/logging/log_core.c" selected="0" top="209" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="385" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/logging/log_msg.h" selected="0" top="365" codecName="Default"/>
@@ -94,7 +96,8 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="184" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/spinlock.h" selected="0" top="172" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="688" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/net/socket.h" selected="0" top="676" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="245" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/date_time/date_time.c" selected="0" top="233" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="454" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/gcloud.c" selected="1" top="434" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="454" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/gcloud.c" selected="0" top="434" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="79" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/arch/arm/core/aarch32/cortex_m/fault_s.S" selected="1" top="67" codecName=""/>
  </Files>
- <ARMCrossStudioWindow activeProject="zephyr/merged.hex" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="zephyr/merged.hex" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

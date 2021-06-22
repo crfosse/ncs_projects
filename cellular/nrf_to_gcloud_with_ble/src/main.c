@@ -193,8 +193,6 @@ void create_message(struct app_message* destination, uint8_t *data, size_t len, 
 
 	message = cJSON_CreateObject();
 
-    cJSON_AddStringToObject(message, "type", "test message");
-
 	char time_str[16];
 	snprintf(time_str, 16, "%lld", *timestamp);
 
@@ -216,8 +214,6 @@ void create_message(struct app_message* destination, uint8_t *data, size_t len, 
 #define BT_ADDR  "06:09:16"
 
 #define ADV_BUF_SIZE 128
-
-static atomic_t ready;
 
 bool bt_parse_cb(struct bt_data *data, void *user_data) {
 
