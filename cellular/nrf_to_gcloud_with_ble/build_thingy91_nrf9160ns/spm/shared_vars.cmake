@@ -1,0 +1,11 @@
+set(spm_KERNEL_HEX_NAME zephyr.hex)
+set(spm_ZEPHYR_BINARY_DIR C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/spm/zephyr)
+set(spm_KERNEL_ELF_NAME zephyr.elf)
+list(APPEND spm_BUILD_BYPRODUCTS C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/spm/zephyr/zephyr.hex)
+list(APPEND spm_BUILD_BYPRODUCTS C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/spm/zephyr/zephyr.elf)
+list(APPEND spm_BUILD_BYPRODUCTS
+    C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/spm/libspmsecureentries.a)
+list(APPEND spm_PM_YML_DEP_FILES C:/ncs/nrf/samples/spm/pm.yml)
+list(APPEND spm_PM_YML_FILES C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/spm/zephyr/include/generated/pm.yml)
+list(APPEND spm_PM_YML_DEP_FILES C:/ncs/nrf/subsys/partition_manager/pm.yml.trustzone)
+list(APPEND spm_PM_YML_FILES C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/spm/modules/nrf/subsys/partition_manager/pm.yml.trustzone)

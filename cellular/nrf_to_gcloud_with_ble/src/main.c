@@ -36,9 +36,11 @@
 #include <bluetooth/gatt_dm.h>
 #include <bluetooth/scan.h>
 
-static K_SEM_DEFINE(connected_to_cloud, 0, 1);
-
 #endif
+
+static K_SEM_DEFINE(connected_to_cloud, 0, 1);
+static K_SEM_DEFINE(ble_ready, 0, 1);
+
 
 /* Size of buffer determines update rate */
 #define MAX_MESSAGE_SIZE 256
@@ -101,6 +103,15 @@ void received_config_handler(const struct mqtt_publish_message *message)
  */
 static void modem_configure(void)
 {
+	/* Turn off LTE power saving features for a more responsive demo. Also,
+	 * request power saving features before network registration. Some
+	 * networks rejects timer updates after the device has registered to the
+	 * LTE network.
+	 */
+	LOG_INF("Disabling PSM and eDRX");
+	lte_lc_psm_req(false);
+	lte_lc_edrx_req(false);
+
     if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT))
     {
         /* Do nothing, modem is already turned on and connected */
@@ -109,13 +120,11 @@ static void modem_configure(void)
     {
         int err;
 
-        //LOG_INF("Enabling PSM\n");
-        /* Enable PSM mode */
-        //lte_lc_psm_req(true);
-
         LOG_INF("Establishing LTE link\n");
         err = lte_lc_init_and_connect();
-        __ASSERT(err == 0, "LTE link could not be established. Rebooting\n");
+        if (err) {
+			LOG_INF("Failed to establish LTE connection: %d", err);
+		}
     }
 }
 
@@ -214,23 +223,6 @@ bool bt_parse_cb(struct bt_data *data, void *user_data) {
 
 	LOG_INF("Parsed adv -- Type: %d", data->type);
 
-	//Should check for connection before publishing
-
-	int pub_success;
-	
-    //Get timestamp
-	int64_t curr_time;
-	date_time_now(&curr_time);
-
-    struct app_message message;
-    create_message(&message, "<message_here>", sizeof("<message_here>"), &curr_time);
-
-    pub_success = gcloud_publish(message.data, message.len, MQTT_QOS_1_AT_LEAST_ONCE);
-    if (pub_success != 0)
-    {
-        LOG_INF("JSON data Publish failed\n");
-    }
-
 	return true;
 }
 
@@ -248,6 +240,26 @@ void scan_filter_match(struct bt_scan_device_info *device_info,
 		LOG_INF("Device found: %s", log_strdup(addr));
 
 		bt_data_parse(device_info->adv_data, bt_parse_cb, (void *)addr);
+
+		/** Demonstration of data transmission **/
+		//Should check for connection before publishing
+
+		int pub_success;
+			
+		//Get timestamp
+		int64_t curr_time;
+		date_time_now(&curr_time);
+
+		struct app_message message;
+		create_message(&message, addr, sizeof(addr), &curr_time);
+
+		pub_success = gcloud_publish(message.data, message.len, MQTT_QOS_1_AT_LEAST_ONCE);
+		if (pub_success != 0)
+		{
+			LOG_INF("JSON data Publish failed\n");
+		}
+		/** Demonstration end **/
+
 	} else {
 		LOG_INF("Not a relevant address: %d", ret);
 	}
@@ -360,7 +372,7 @@ static void bt_ready(int err)
 		return;
 	}
 
-	atomic_set(&ready, true);
+	k_sem_give(&ble_ready);
 
 	//Wait for cloud connection
     k_sem_take(&connected_to_cloud, K_FOREVER);
@@ -374,19 +386,28 @@ void main(void)
 {
     int err;
 
-    LOG_INF("Google Cloud env sensor app started");
+    LOG_INF("Google Cloud BLE app started");
 
     #ifdef WITH_BLE
 		err = bt_enable(bt_ready);
 		if (err) {
 			LOG_ERR("bt_enable: %d", err);
 		}
+
+	k_sem_take(&ble_ready, K_FOREVER);
 	#endif
 
-    LOG_INF("Initializing modem\n");
+    err = gcloud_provision();
+    if (err)
+    {
+        LOG_ERR("Provisioning failed, error: %d", err);
+		return;
+    }
+
+    LOG_INF("Initializing modem");
     modem_configure();
 
-    LOG_INF("Initializing modem info\n");
+    LOG_INF("Initializing modem info");
     modem_info_init();
 
     date_time_update_async(date_time_handler);
@@ -398,27 +419,19 @@ void main(void)
                              7, 0, K_NO_WAIT);
 
 
-    err = gcloud_provision();
-    if (err)
-    {
-        LOG_ERR("Provisioning failed, error: %d\n", err);
-        /* Reboot */
-        sys_reboot(0); //TODO: Handle error
-    }
-
     /* Connect to Google Cloud */
-    LOG_INF("Connecting to Google Cloud\n");
+    LOG_INF("Connecting to Google Cloud");
     //err = gcloud_connect(received_config_handler);
     err = gcloud_connect(NULL);
     if (err)
     {
-        LOG_ERR("Failed to connect to Google Cloud, error: %d\n", err);
+        LOG_ERR("Failed to connect to Google Cloud, error: %d", err);
         /* Reboot */
         sys_reboot(0); //TODO: Handle error
     }
     else
     {
-        LOG_INF("Connected to Google Cloud\n");
+        LOG_INF("Connected to Google Cloud");
 	    k_sem_give(&connected_to_cloud);
     }
     

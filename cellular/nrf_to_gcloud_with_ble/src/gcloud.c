@@ -439,7 +439,9 @@ int gcloud_provision(void) {
 
     for (enum modem_key_mgmt_cred_type type = 0; type < 5; type++) {
         err = modem_key_mgmt_delete(sec_tag, type);
-        if (err) {
+        if (err == -ENOENT) {
+            LOG_DBG("No key present. Ignore and continue.");
+        } else if (err) {
             LOG_ERR("key delete err: [%d] %s", err, strerror(err));
         }
     }

@@ -1,0 +1,100 @@
+<!DOCTYPE CrossStudio_Session_File>
+<session>
+ <Bookmarks/>
+ <Breakpoints groups="Breakpoints" active_group="Breakpoints">
+  <BreakpointListItem trigger="" line="413" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../src/main.c" useHWbreakpoint="false"/>
+  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault;SecureFault"/>
+ </Breakpoints>
+ <ExecutionProfileWindow/>
+ <FrameBufferWindow>
+  <FrameBufferWindow bufferHeight="-1" addressSpace="" addressText="" bufferWidth="-1"/>
+ </FrameBufferWindow>
+ <Memory1>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory1>
+ <Memory2>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory2>
+ <Memory3>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory3>
+ <Memory4>
+  <MemoryWindow addressSpace="" dataSize="1" autoEvaluate="0" viewMode="0" addressOrder="0" columnsText="" refreshPeriod="0" name="zephyr/merged.hex" radix="16" sizeText="" addressText=""/>
+ </Memory4>
+ <Project>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;zephyr/merged.hex"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;app/libapp.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;app/libapp.a;C_COMPILER__app_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/at_cmd/lib..__nrf__lib__at_cmd.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/at_cmd/lib..__nrf__lib__at_cmd.a;C_COMPILER__.2e.2e__nrf__lib__at_cmd_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/at_cmd_parser/lib..__nrf__lib__at_cmd_parser.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/at_cmd_parser/lib..__nrf__lib__at_cmd_parser.a;C_COMPILER__.2e.2e__nrf__lib__at_cmd_parser_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/at_notif/lib..__nrf__lib__at_notif.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/at_notif/lib..__nrf__lib__at_notif.a;C_COMPILER__.2e.2e__nrf__lib__at_notif_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/date_time/lib..__nrf__lib__date_time.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/date_time/lib..__nrf__lib__date_time.a;C_COMPILER__.2e.2e__nrf__lib__date_time_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/lte_link_control/lib..__nrf__lib__lte_link_control.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;modules/nrf/lib/lte_link_control/lib..__nrf__lib__lte_link_control.a;C_COMPILER__.2e.2e__nrf__lib__lte_link_control_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a;ASM_COMPILER__arch__arm__core__aarch32_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/kernel/libkernel.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/kernel/libkernel.a;C_COMPILER__kernel_"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/libzephyr.a"/>
+  <ProjectSessionItem path="nrf_to_gcloud_with_ble;build;zephyr/libzephyr.a;C_COMPILER__zephyr_"/>
+ </Project>
+ <Register1>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/MSP;CPU/PSP;CPU/PRIMASK;CPU/BASEPRI;CPU/FAULTMASK;CPU/CONTROL;CPU/internal;CPU Secure/MSP_S;CPU Secure/PSP_S;CPU Secure/MSPLIM_S;CPU Secure/PSPLIM_S;CPU Secure/PRIMASK_S;CPU Secure/BASEPRI_S;CPU Secure/FAULTMASK_S;CPU Secure/CONTROL_S;CPU Non-Secure/MSP_NS;CPU Non-Secure/PSP_NS;CPU Non-Secure/MSPLIM_NS;CPU Non-Secure/PSPLIM_NS;CPU Non-Secure/PRIMASK_NS;CPU Non-Secure/BASEPRI_NS;CPU Non-Secure/FAULTMASK_NS;CPU Non-Secure/CONTROL_NS" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register1>
+ <Register2>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/MSP;CPU/PSP;CPU/PRIMASK;CPU/BASEPRI;CPU/FAULTMASK;CPU/CONTROL;CPU/internal;CPU Secure/MSP_S;CPU Secure/PSP_S;CPU Secure/MSPLIM_S;CPU Secure/PSPLIM_S;CPU Secure/PRIMASK_S;CPU Secure/BASEPRI_S;CPU Secure/FAULTMASK_S;CPU Secure/CONTROL_S;CPU Non-Secure/MSP_NS;CPU Non-Secure/PSP_NS;CPU Non-Secure/MSPLIM_NS;CPU Non-Secure/PSPLIM_NS;CPU Non-Secure/PRIMASK_NS;CPU Non-Secure/BASEPRI_NS;CPU Non-Secure/FAULTMASK_NS;CPU Non-Secure/CONTROL_NS" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register2>
+ <Register3>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/MSP;CPU/PSP;CPU/PRIMASK;CPU/BASEPRI;CPU/FAULTMASK;CPU/CONTROL;CPU/internal;CPU Secure/MSP_S;CPU Secure/PSP_S;CPU Secure/MSPLIM_S;CPU Secure/PSPLIM_S;CPU Secure/PRIMASK_S;CPU Secure/BASEPRI_S;CPU Secure/FAULTMASK_S;CPU Secure/CONTROL_S;CPU Non-Secure/MSP_NS;CPU Non-Secure/PSP_NS;CPU Non-Secure/MSPLIM_NS;CPU Non-Secure/PSPLIM_NS;CPU Non-Secure/PRIMASK_NS;CPU Non-Secure/BASEPRI_NS;CPU Non-Secure/FAULTMASK_NS;CPU Non-Secure/CONTROL_NS" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register3>
+ <Register4>
+  <RegisterWindow visibleNodes="CPU - Current Context/r0;CPU - Current Context/r1;CPU - Current Context/r2;CPU - Current Context/r3;CPU - Current Context/r4;CPU - Current Context/r5;CPU - Current Context/r6;CPU - Current Context/r7;CPU - Current Context/r8;CPU - Current Context/r9;CPU - Current Context/r10;CPU - Current Context/r11;CPU - Current Context/r12;CPU - Current Context/sp(r13);CPU - Current Context/lr(r14);CPU - Current Context/pc(r15);CPU - Current Context/apsr;CPU/r0;CPU/r1;CPU/r2;CPU/r3;CPU/r4;CPU/r5;CPU/r6;CPU/r7;CPU/r8;CPU/r9;CPU/r10;CPU/r11;CPU/r12;CPU/sp(r13);CPU/lr(r14);CPU/pc(r15);CPU/xpsr;CPU/MSP;CPU/PSP;CPU/PRIMASK;CPU/BASEPRI;CPU/FAULTMASK;CPU/CONTROL;CPU/internal;CPU Secure/MSP_S;CPU Secure/PSP_S;CPU Secure/MSPLIM_S;CPU Secure/PSPLIM_S;CPU Secure/PRIMASK_S;CPU Secure/BASEPRI_S;CPU Secure/FAULTMASK_S;CPU Secure/CONTROL_S;CPU Non-Secure/MSP_NS;CPU Non-Secure/PSP_NS;CPU Non-Secure/MSPLIM_NS;CPU Non-Secure/PSPLIM_NS;CPU Non-Secure/PRIMASK_NS;CPU Non-Secure/BASEPRI_NS;CPU Non-Secure/FAULTMASK_NS;CPU Non-Secure/CONTROL_NS" binaryNodes="" asciiNodes="" openNodes="CPU - Current Context" name="zephyr/merged.hex" decimalNodes="" octalNodes="" unsignedNodes=""/>
+ </Register4>
+ <Threads>
+  <ThreadsWindow showLists=""/>
+ </Threads>
+ <TraceWindow>
+  <Trace enabled="Yes"/>
+ </TraceWindow>
+ <Watch1>
+  <Watches active="1" update="Never"/>
+ </Watch1>
+ <Watch2>
+  <Watches active="0" update="Never"/>
+ </Watch2>
+ <Watch3>
+  <Watches active="0" update="Never"/>
+ </Watch3>
+ <Watch4>
+  <Watches active="0" update="Never"/>
+ </Watch4>
+ <Files>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="412" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/main.c" selected="0" top="401" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="368" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/kernel/init.c" selected="0" top="356" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="224" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/subsys/logging/log_core.c" selected="0" top="209" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="385" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/logging/log_msg.h" selected="0" top="365" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="177" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/lte_link_control/lte_lc.c" selected="0" top="165" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="87" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/kernel/sem.c" selected="0" top="75" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="106" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/arch/arm/core/aarch32/cpu_idle.S" selected="0" top="94" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="501" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/lte_link_control/lte_lc_helpers.c" selected="0" top="489" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="410" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/at_cmd_parser/at_params.c" selected="0" top="398" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="117" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/at_notif/at_notif.c" selected="0" top="98" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="686" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="zephyr/include/generated/syscalls/kernel.h" selected="0" top="674" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="224" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/kernel/mutex.c" selected="0" top="210" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="276" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../modules/hal/cmsis/CMSIS/Core/Include/cmsis_gcc.h" selected="0" top="264" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="258" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/kernel/include/ksched.h" selected="0" top="242" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="122" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/at_cmd/at_cmd.c" selected="0" top="110" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="75" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/arch/arm/aarch32/asm_inline_gcc.h" selected="0" top="63" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="184" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/spinlock.h" selected="0" top="172" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="688" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/net/socket.h" selected="0" top="676" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="245" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/date_time/date_time.c" selected="0" top="233" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="454" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/gcloud.c" selected="1" top="434" codecName="Default"/>
+ </Files>
+ <ARMCrossStudioWindow activeProject="zephyr/merged.hex" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
+</session>

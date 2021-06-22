@@ -1,0 +1,13 @@
+# Target labels
+ spm_subimage
+# Source files and their labels
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/CMakeFiles/spm_subimage
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/CMakeFiles/spm_subimage.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/CMakeFiles/spm_subimage-complete.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-install.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-mkdir.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-download.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-update.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-patch.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-configure.rule
+C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-build.rule

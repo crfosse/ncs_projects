@@ -1,0 +1,7 @@
+# Create a span for the RAM to be configured as SECURE by the spm.
+sram_secure:
+  span: []
+  region: sram_primary
+sram_nonsecure:
+  span: [sram_primary]
+  region: sram_primary

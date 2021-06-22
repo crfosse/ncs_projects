@@ -10,21 +10,6 @@ config GCLOUD_REGISTRY_NAME
 config GCLOUD_DEVICE_NAME
     string "Name of the device in Google Cloud"
           
-
-config DATE_TIME_UPDATE_INTERVAL_SECONDS
-    int "Date time update interval, in seconds"
-    default 10
-
-config GCLOUD_WATCHDOG_TIMEOUT_MSEC
-    int "Watchdog timeout in milliseconds"
-    default 10000
-    
-menuconfig DATE_TIME
-    bool "Date time library"
-    select AT_CMD
-    select SNTP
-    depends on BSD_LIBRARY
-
 menu "Environment sensors"
 
     config TEMP_DEV_NAME
@@ -62,16 +47,6 @@ menu "Environment sensors"
             the GPS is active.
 
 endmenu # Environment sensors
-
-config PRINTK
-    bool "Send printk() to console"
-    default y
-    help
-        This option directs printk() debugging output to the supported
-        console device, rather than suppressing the generation
-        of printk() output entirely. Output is sent immediately, without
-        any mutual exclusion or buffering.
-
 
 config MQTT_MESSAGE_BUFFER_SIZE
     int "MQTT message buffer size"

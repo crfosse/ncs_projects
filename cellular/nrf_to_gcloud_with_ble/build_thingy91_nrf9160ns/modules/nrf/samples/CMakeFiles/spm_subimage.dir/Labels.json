@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/CMakeFiles/spm_subimage"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/CMakeFiles/spm_subimage.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/CMakeFiles/spm_subimage-complete.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-install.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-mkdir.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-download.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-update.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-patch.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-configure.rule"
+		},
+		{
+			"file" : "C:/ncs/ncs_projects/cellular/nrf_to_gcloud_with_ble/build_thingy91_nrf9160ns/modules/nrf/samples/spm_subimage-prefix/src/spm_subimage-stamp/spm_subimage-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"spm_subimage"
+		],
+		"name" : "spm_subimage"
+	}
+}
