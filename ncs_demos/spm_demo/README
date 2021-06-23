@@ -1,0 +1,1 @@
+A simple application demonstrating how FICR can be read from the non-secure partition of nRF9160 using secure entry functions.
