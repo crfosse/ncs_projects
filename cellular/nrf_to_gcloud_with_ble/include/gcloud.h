@@ -54,7 +54,9 @@ int gcloud_publish_state(uint8_t *data, uint32_t size, enum mqtt_qos qos);
 int gcloud_connect(received_config_handler_t received_config_cb);
 
 /**
- * @brief Initializes the module and provisions the modem so that an TLS 
+ * @brief Deprecating. Provisioning should be done in production.
+ * 
+ * Initializes the module and provisions the modem so that an TLS 
  * connection can be established to Google Cloud.
  * 
  * @note Shall be called before the modem is turned on.
@@ -63,7 +65,7 @@ int gcloud_connect(received_config_handler_t received_config_cb);
  * 
  * @retval 0 or an error code indicating reason for failure.
  */
-int gcloud_provision(void);
+//int gcloud_provision(void);
 
 /**
  * @brief Disconnects the device from Google Cloud.

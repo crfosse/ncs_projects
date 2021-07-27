@@ -11,28 +11,13 @@
 #include <net/socket.h>
 #include <net/tls_credentials.h>
 
-#include <data/jwt.h>
-
 #include <modem/modem_key_mgmt.h>
+#include <modem/modem_jwt.h>
 #include <nrf_modem.h>
 
 #include "gcloud.h"
 
 #include "globalsign.inc"
-
-#define ROOT_CERT \
-    "-----BEGIN CERTIFICATE-----\n" \
-    "MIIBdTCCARugAwIBAgIJAOvj4PVfAgqjMAoGCCqGSM49BAMCMBYxFDASBgNVBAMM\n" \
-    "C25yZjkxLW1hcnRlMCAXDTE5MDQwNTExMTUxN1oYDzQ3NTcwMzAyMTExNTE3WjAW\n" \
-    "MRQwEgYDVQQDDAtucmY5MS1tYXJ0ZTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IA\n" \
-    "BAq8otkWGnocpdAxlnpJdVn6EBb1WbQnZXLFaYzsMeXWGFIIO02hWTvaSUPI1xNs\n" \
-    "0QB8c3IU9oBhDXkRNU2Nqi2jUDBOMB0GA1UdDgQWBBRLAhO335CAd280I/qVQmiM\n" \
-    "07nd8TAfBgNVHSMEGDAWgBRLAhO335CAd280I/qVQmiM07nd8TAMBgNVHRMEBTAD\n" \
-    "AQH/MAoGCCqGSM49BAMCA0gAMEUCIF2kQO7Cqn73ANmwBdgGA1y/KGOpOU4I/ywF\n" \
-    "LEu8trOUAiEA8//UWttMRkmaylghw3mgsYGGKk17rY+4j+4mGUwvDnw=\n" \
-    "-----END CERTIFICATE-----"
-
-#define GCLOUD_CA_CERTIFICATE ROOT_CERT
 
 #define CONFIGURATION_SUBSCRIPTION
 
@@ -52,7 +37,7 @@
 #define GCLOUD_STATE_TOPIC "/devices/" CONFIG_GCLOUD_DEVICE_NAME "/state"
 #define GCLOUD_TOPIC "/devices/" CONFIG_GCLOUD_DEVICE_NAME "/events"
 
-#define JWT_BUFFER_SIZE 256
+#define JWT_BUFFER_SIZE 850
 
 #define GCLOUD_THREAD_STACK_SIZE 2048
 
@@ -125,9 +110,7 @@ static struct mqtt_topic gcloud_topics_list[] = {
     }
 };
 
-/* Private key information */
-extern unsigned char zepfull_private_der[];
-extern unsigned int zepfull_private_der_len;
+
 
 static received_config_handler_t received_config_handler = NULL;
 
@@ -212,39 +195,19 @@ static void broker_init(void)
 static int make_jwt(char *buffer, size_t buffer_size) {
 
     int err;
-    struct jwt_builder jb;
+    
+    struct jwt_data jwt;
+    jwt.sec_tag = GCLOUD_SEC_TAG;
+    jwt.key = JWT_KEY_TYPE_CLIENT_PRIV;
+    jwt.alg = JWT_ALG_TYPE_ES256;
+    jwt.exp_delta_s = 12 * 60 * 60; //24 hours
+    jwt.jwt_buf = buffer;
+    jwt.jwt_sz = buffer_size;
+    jwt.subject = NULL;
+    jwt.audience = CONFIG_GCLOUD_PROJECT_NAME;
 
-    err = jwt_init_builder(&jb, buffer, buffer_size);
-    if (err != 0) {
-        LOG_ERR("Unable to init JWT builder: %d", err);
-        return err;
-    }
+    err = modem_jwt_generate(&jwt);
 
-    /* Get Unix time from modem thread and mask upper bits */
-    int64_t ntp;
-    date_time_now(&ntp);
-
-    int64_t unixtime = (ntp/1000);    //TODO: Is unix time valid as jwt timestamp?
-    int32_t y = (int32_t)unixtime;
-
-    LOG_DBG("Unix Timestamp: %d\n", y);
-    int32_t expiry_time = (y + (12 * 60 * 60));
-    int32_t issue_time = y;
-
-    err = jwt_add_payload(&jb, expiry_time, issue_time, CONFIG_GCLOUD_PROJECT_NAME);
-    if (err != 0) {
-        LOG_ERR("Unable to add JWT payload: %d", err);
-        return err;
-    }
-    err = jwt_sign(&jb, zepfull_private_der, zepfull_private_der_len);
-    if (err != 0) {
-        LOG_ERR("Unable to add JWT payload: %d", err);
-        return err;
-    }
-    if (jb.overflowed != 0) {
-        LOG_ERR("JWT buffer overflowed");
-        return -ENOMEM;
-    }
     return err;
 }
 
@@ -416,10 +379,7 @@ void reconnect_timer_handler(struct k_timer *timer_id) {
     }
 }
 
-int gcloud_provision(void) {
-
-    int err;
-
+static void config_tls(void) {
     /* Security configuration */
     static sec_tag_t sec_tag_list[] = {GCLOUD_SEC_TAG};
     tls_config = (client.transport).tls.config;
@@ -433,48 +393,6 @@ int gcloud_provision(void) {
 	tls_config.sec_tag_count = ARRAY_SIZE(sec_tag_list);
 	tls_config.sec_tag_list = sec_tag_list;
 	tls_config.hostname = GCLOUD_HOSTNAME;
-
-    nrf_sec_tag_t sec_tag = GCLOUD_SEC_TAG;
-
-
-    bool cert_exists = false;
-    uint8_t flags;
-
-    err = modem_key_mgmt_exists(GCLOUD_SEC_TAG, MODEM_KEY_MGMT_CRED_TYPE_CA_CHAIN, &cert_exists, &flags);
-    if(err) {
-        LOG_ERR("Could not check if key exists. Will delete and try to write. Err: %d", err);
-        cert_exists = false;
-    }
-
-    if(cert_exists) {
-        LOG_DBG("CA Certificate is already present and we can continue.");
-        return 0;
-    } else {
-        LOG_DBG("No certificates present. Deleteting and writing new.");
-            /* Delete certificates */
-
-        for (enum modem_key_mgmt_cred_type type = 0; type < 5; type++) {
-            err = modem_key_mgmt_delete(sec_tag, type);
-            if (err == -ENOENT) {
-                LOG_DBG("No key present. Ignore and continue.");
-            } else if (err) {
-                LOG_ERR("key delete err: [%d] %s", err, strerror(err));
-            }
-        }
-        // LOG_DBG("CERT:\n%s\n", GCLOUD_CA_CERTIFICATE);
-        /* Provision CA Certificate */
-        err = modem_key_mgmt_write(
-            GCLOUD_SEC_TAG,
-            MODEM_KEY_MGMT_CRED_TYPE_CA_CHAIN,
-            GCLOUD_CA_CERTIFICATE,
-            strlen(GCLOUD_CA_CERTIFICATE));
-        if (err != 0) {
-            LOG_ERR("GCLOUD_CA_CERTIFICATE err: [%d] %s\n", err, strerror(err));
-            return err;
-        }
-
-        return 0;
-    }
 }
 
 static void mqtt_event_handler(struct mqtt_client *const cli,
@@ -713,6 +631,8 @@ extern void gcloud_thread(void *unused1, void *unused2, void *unused3)
     struct mqtt_publish_param msg;
 
     k_timer_init(&reconnect_timer, reconnect_timer_handler, NULL);
+
+    config_tls();
 
     LOG_INF("Google Cloud Thread Running\n");
     while (true) {

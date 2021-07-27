@@ -77,7 +77,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="26" y="253" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/main.c" selected="0" top="241" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="3" y="253" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/main.c" selected="0" top="241" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="368" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/kernel/init.c" selected="0" top="356" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="224" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/subsys/logging/log_core.c" selected="0" top="209" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="385" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/logging/log_msg.h" selected="0" top="365" codecName="Default"/>
@@ -97,7 +97,7 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="688" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/include/net/socket.h" selected="0" top="676" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="245" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../nrf/lib/date_time/date_time.c" selected="0" top="233" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="454" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/gcloud.c" selected="0" top="434" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="79" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/arch/arm/core/aarch32/cortex_m/fault_s.S" selected="1" top="67" codecName=""/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="79" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../zephyr/arch/arm/core/aarch32/cortex_m/fault_s.S" selected="1" top="67" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="zephyr/merged.hex" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="zephyr/merged.hex" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

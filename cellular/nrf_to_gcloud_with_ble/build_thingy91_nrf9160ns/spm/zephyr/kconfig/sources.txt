@@ -79,6 +79,7 @@ C:\ncs\nrf\modules\mcuboot\Kconfig
 C:\ncs\nrf\modules\memfault\Kconfig
 C:\ncs\nrf\modules\tfm\zephyr\Kconfig
 C:\ncs\nrf\modules\trusted-firmware-m\Kconfig
+C:\ncs\nrf\modules\trusted-firmware-m\Kconfig.mbedtls.defconfig
 C:\ncs\nrf\modules\trusted-firmware-m\Kconfig.mbedtls_minimal.defconfig
 C:\ncs\nrf\modules\trusted-firmware-m\Kconfig.tfm_minimal.defconfig
 C:\ncs\nrf\samples\Kconfig

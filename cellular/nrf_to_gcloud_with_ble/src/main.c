@@ -393,13 +393,6 @@ void main(void)
 	k_sem_take(&ble_ready, K_FOREVER);
 	#endif
 
-    err = gcloud_provision();
-    if (err)
-    {
-        LOG_ERR("Provisioning failed, error: %d", err);
-		return;
-    }
-
     LOG_INF("Initializing modem");
     modem_configure();
 
@@ -429,11 +422,5 @@ void main(void)
     {
         LOG_INF("Connected to Google Cloud");
 	    k_sem_give(&connected_to_cloud);
-    }
-    
-	//Sleeping main
-    while (true)
-    {
-        k_sleep(K_SECONDS(1));
     }
 }
