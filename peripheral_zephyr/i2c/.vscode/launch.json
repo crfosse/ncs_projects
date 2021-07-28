@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug NCS",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/zephyr/zephyr.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "serverpath": "C:/Program Files (x86)/SEGGER/JLink/JLinkGDBServerCL.exe",
+            "servertype": "jlink",
+            "device": "nrf9160_xxAA",
+            "interface": "swd",
+            "armToolchainPath": "C:/gnuarmemb/bin",
+            "ipAddress": null,
+            "serialNumber": null
+        }
+    ]
+}

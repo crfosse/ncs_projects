@@ -1,0 +1,19 @@
+&spi0 {
+  status = "okay";
+  label = "SPI_0"; 
+};
+
+&uart0 {
+    status = "disabled";
+};
+
+&uart1 {
+    compatible = "nordic,nrf-uarte";
+    status = "okay";
+    label = "UART_1";
+    current-speed = < 0x1c200 >;
+    tx-pin = < 0x14 >;
+    rx-pin = < 0x16 >;
+    rts-pin = < 0x13 >;
+    cts-pin = < 0x15 >;
+};
