@@ -32,6 +32,8 @@
 
 #define MQTT_LIVE_PERIOD K_SECONDS(55)
 #define GCLOUD_DISCONNECT_INTERVAL K_HOURS(12)
+//#define GCLOUD_DISCONNECT_INTERVAL K_MINUTES(1) //For testing purposes
+
 
 #define GCLOUD_CONFIG_TOPIC "/devices/" CONFIG_GCLOUD_DEVICE_NAME "/config"
 #define GCLOUD_STATE_TOPIC "/devices/" CONFIG_GCLOUD_DEVICE_NAME "/state"
@@ -42,6 +44,8 @@
 #define GCLOUD_THREAD_STACK_SIZE 2048
 
 #define GCLOUD_THREAD_PRIORITY 7
+
+#define DEFAULT_MSGQ_TIMEOUT K_SECONDS(100)
 
 LOG_MODULE_REGISTER(gcloud);
 
@@ -274,9 +278,16 @@ int gcloud_connect(received_config_handler_t received_config_cb) {
     struct gcloud_event msg = {
         .type = CONNECT
     };
-    err = k_msgq_put_atomic(&gcloud_msgq, &msg, K_FOREVER);
 
-    k_sem_take(&gc_connected_sem, K_FOREVER);
+    LOG_DBG("Sending connect command");
+    err = k_msgq_put_atomic(&gcloud_msgq, &msg, DEFAULT_MSGQ_TIMEOUT);
+    if(err) {
+        LOG_ERR("Could not add connect command to queue: %d", err);
+    }
+
+    LOG_DBG("Waiting for connection");
+
+    k_sem_take(&gc_connected_sem, DEFAULT_MSGQ_TIMEOUT);
 
     return err;
 }
@@ -288,7 +299,7 @@ int gcloud_disconnect() {
     struct gcloud_event msg = {
         .type = DISCONNECT
     };
-    err = k_msgq_put_atomic(&gcloud_msgq, &msg, K_FOREVER);
+    err = k_msgq_put_atomic(&gcloud_msgq, &msg, DEFAULT_MSGQ_TIMEOUT);
 
     return err;
 }
@@ -320,7 +331,7 @@ int gcloud_publish(uint8_t *data, uint32_t size, enum mqtt_qos qos)
         }
     };
 
-    err = k_msgq_put_atomic(&gcloud_msgq, &cmd, K_FOREVER);
+    err = k_msgq_put_atomic(&gcloud_msgq, &cmd, DEFAULT_MSGQ_TIMEOUT);
 
     return err;
 }
@@ -348,7 +359,7 @@ int gcloud_publish_state(uint8_t *data, uint32_t size, enum mqtt_qos qos)
             }
         }
     };
-    err = k_msgq_put_atomic(&gcloud_msgq, &state_cmd, K_FOREVER);
+    err = k_msgq_put_atomic(&gcloud_msgq, &state_cmd, DEFAULT_MSGQ_TIMEOUT);
     return err;
 }
 
@@ -422,7 +433,7 @@ static void mqtt_event_handler(struct mqtt_client *const cli,
                 .param.subscribe = {}
             };
 
-            err = k_msgq_put_atomic(&gcloud_msgq, &cmd, K_FOREVER);
+            err = k_msgq_put_atomic(&gcloud_msgq, &cmd, DEFAULT_MSGQ_TIMEOUT);
 
             if (err) {
                 LOG_ERR("k_msgq_put_atomic (subscribe) failed: [%d] %s", err, strerror(err));
@@ -480,8 +491,9 @@ static void mqtt_event_handler(struct mqtt_client *const cli,
             // Purge message queue to make sure that there are no old messages waiting
             k_msgq_purge(&gcloud_msgq);
 
-
             if (connected || connecting) {
+                LOG_DBG("Periodic reconnection");
+                k_thread_abort(mqtt_tid);
                 err = gcloud_connect(received_config_handler);
                 if (err) {
                     LOG_ERR("k_msgq_put_atomic (reconnect) [%d] %s", err, strerror(err));
@@ -636,7 +648,7 @@ extern void gcloud_thread(void *unused1, void *unused2, void *unused3)
 
     LOG_INF("Google Cloud Thread Running\n");
     while (true) {
-
+        
         k_msgq_get_atomic(&gcloud_msgq, &event, K_FOREVER);
 
         switch (event.type) {
@@ -645,8 +657,8 @@ extern void gcloud_thread(void *unused1, void *unused2, void *unused3)
                 LOG_DBG("Initiating broker");
                 broker_init();
 
-                LOG_DBG("Making JWT");
-                make_jwt(jwt_buffer, JWT_BUFFER_SIZE);
+                //LOG_DBG("Making JWT");
+                //make_jwt(jwt_buffer, JWT_BUFFER_SIZE);
 
                 LOG_DBG("Initiating client");
                 client_init();
@@ -667,7 +679,6 @@ extern void gcloud_thread(void *unused1, void *unused2, void *unused3)
                 mqtt_tid = k_thread_create(&mqtt_thread, mqtt_stack_area, K_THREAD_STACK_SIZEOF(mqtt_stack_area),
                              (k_thread_entry_t)mqtt_thread_func, NULL, NULL, NULL,
                              7, 0, K_NO_WAIT);
-
 
                 break;
             case PUBLISH_STATE:
@@ -707,23 +718,24 @@ extern void gcloud_thread(void *unused1, void *unused2, void *unused3)
                 LOG_DBG("Got DISCONNECT command");
             if (connected) {
                 k_timer_stop(&reconnect_timer);
+       
+                /* purge message queue */
+                //k_msgq_purge(&gcloud_msgq);
+                connected = false;
+                if (event.type == DISCONNECT) {
+                    LOG_DBG("Not setting connecting flag");
+                    connecting = false;
+                } else {
+                    LOG_DBG("Setting connecting flag");
+                    connecting = true;
+                }
+
                 LOG_DBG("Disconnecting mqtt");
                 err = mqtt_disconnect(&client);
                 if (err) {
                     LOG_ERR("mqtt_disconnect (reconnect) failed: [%d] %s", err, strerror(-err));
                     // TODO: Find a way to report this error to the application.
                 }
-                /* purge message queue */
-                k_msgq_purge(&gcloud_msgq);
-                k_thread_abort(mqtt_tid);
-                connected = false;
-                if (event.type == DISCONNECT) {
-                    LOG_DBG("Not setting connecting flag");
-                    connecting = false;
-                } else {
-                    connecting = true;
-                }
-
             };
             break;
             case SUBSCRIBE:
