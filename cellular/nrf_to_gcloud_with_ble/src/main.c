@@ -25,7 +25,7 @@
 #include <gcloud.h>
 #include <cJSON.h>
 
-#define WITH_BLE
+//#define WITH_BLE
 
 #ifdef WITH_BLE
 
@@ -79,6 +79,7 @@ static K_SEM_DEFINE(date_time_ok, 0, 1);
 
 /* Forward declarations of functions */
 static void store_modem_configuration(void);
+static void scan_stop(void);
 
 /* Handlers */
 void button_handler(uint32_t button_state, uint32_t has_changed)
@@ -253,6 +254,7 @@ void scan_filter_match(struct bt_scan_device_info *device_info,
 		if (pub_success != 0)
 		{
 			LOG_INF("JSON data Publish failed\n");
+			scan_stop();
 		}
 		/** Demonstration end **/
 
@@ -406,6 +408,7 @@ void main(void)
     gc_tid = k_thread_create(&gc_thread, gc_stack_area, K_THREAD_STACK_SIZEOF(gc_stack_area),
                              (k_thread_entry_t)gcloud_thread, NULL, NULL, NULL,
                              7, 0, K_NO_WAIT);
+
 
 
     /* Connect to Google Cloud */

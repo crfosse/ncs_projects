@@ -492,7 +492,7 @@ static void mqtt_event_handler(struct mqtt_client *const cli,
             k_msgq_purge(&gcloud_msgq);
 
             if (connected || connecting) {
-                LOG_DBG("Periodic reconnection");
+                LOG_DBG("Reconnection");
                 k_thread_abort(mqtt_tid);
                 err = gcloud_connect(received_config_handler);
                 if (err) {

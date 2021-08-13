@@ -33,14 +33,22 @@ static const struct adc_channel_cfg m_1st_channel_cfg = {
 #endif
 };
 
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 8
 static int16_t m_sample_buffer[BUFFER_SIZE];
+
+const struct adc_sequence_options sequence_opts = {
+	.interval_us = 0,
+	.callback = NULL,
+	.user_data = NULL,
+	.extra_samplings = 7,
+};
 
 static int adc_sample(void)
 {
 	int ret;
 
 	const struct adc_sequence sequence = {
+		.options = &sequence_opts,
 		.channels = BIT(ADC_1ST_CHANNEL_ID),
 		.buffer = m_sample_buffer,
 		.buffer_size = sizeof(m_sample_buffer),
@@ -55,13 +63,20 @@ static int adc_sample(void)
 	printk("ADC read err: %d\n", ret);
 
 	/* Print the AIN0 values */
+	printk("ADC raw value: ");
+	for (int i = 0; i < BUFFER_SIZE; i++) {
+		printk("%d ", m_sample_buffer[i]);
+	}
+	
+	printf("\n Measured voltage: ");
 	for (int i = 0; i < BUFFER_SIZE; i++) {
 		float adc_voltage = 0;
 		adc_voltage = (float)(((float)m_sample_buffer[i] / 1023.0f) *
 				      3600.0f);
-		printk("ADC raw value: %d\n", m_sample_buffer[i]);
-		printf("Measured voltage: %f mV\n", adc_voltage);
+		printk("%f ",adc_voltage);
 	}
+	printk("\n");
+
 
 	return ret;
 }
@@ -85,7 +100,7 @@ int main(void)
 	 * As this generates a _DONE and _RESULT event
 	 * the first result will be incorrect.
 	 */
-	NRF_SAADC->TASKS_CALIBRATEOFFSET = 1;
+	NRF_SAADC_S->TASKS_CALIBRATEOFFSET = 1;
 	while (1) {
 		err = adc_sample();
 		if (err) {
