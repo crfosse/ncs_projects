@@ -1,0 +1,8 @@
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
+
+
+module = TIMESTAMP_DEMO
+module-str = Timestamp demo
+source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"
